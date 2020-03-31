@@ -1,0 +1,3 @@
+[submodule "JMPCFramework"]
+	path = JMPCFramework
+	url = https://github.com/jmo0612/JMPCFramework.git
