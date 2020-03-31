@@ -6,10 +6,13 @@
 package com.abal.arsipsuratkalawat;
 
 import com.thowo.jmjavaframework.JMFunctions;
+import com.thowo.jmpcframework.JMPCFunctions;
 import com.thowo.jmpcframework.component.JMPCAsyncLoaderDefault;
 import com.thowo.jmpcframework.component.JMPCSplashForm;
 import com.thowo.jmpcframework.component.JMPCUIMessenger;
 import java.io.File;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  *
@@ -20,12 +23,11 @@ public class Main {
     /**
      * @param args the command line arguments
      */
+    
+    
     public static void main(String[] args) {
         // TODO code application logic here
-        
-
-        
-        new JMPCSplashForm().setVisible(true);
+        new JMPCSplashForm(new MainForm(),GitIgnoreDBConnection.getDBs()).setVisible(true);
     }
     
 }
