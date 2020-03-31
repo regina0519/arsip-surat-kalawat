@@ -11,4 +11,6 @@ repositories {
 
 dependencies {
     testImplementation     'junit:junit:4.13'
+    implementation project(path: ':JMPCFramework')
+    implementation project(path: ':JMPCFramework:JMJavaFramework')
 }
