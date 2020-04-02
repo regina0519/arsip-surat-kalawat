@@ -27,7 +27,7 @@ public class Main {
     
     public static void main(String[] args) {
         // TODO code application logic here
-        new JMPCSplashForm(new MainForm(),GitIgnoreDBConnection.getDBs()).setVisible(true);
+        new JMPCSplashForm(new LoginForm(),GitIgnoreDBConnection.getDBs()).setVisible(true);
     }
     
 }
