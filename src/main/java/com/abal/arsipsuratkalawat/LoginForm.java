@@ -6,9 +6,11 @@
 package com.abal.arsipsuratkalawat;
 
 import com.thowo.jmjavaframework.JMFunctions;
+import com.thowo.jmjavaframework.report.JMWord;
 import com.thowo.jmpcframework.JMPCFunctions;
 import com.thowo.jmpcframework.component.JMPCForm;
 import com.thowo.jmpcframework.component.JMPCLoadingSprite;
+import java.io.File;
 
 /**
  *
@@ -134,7 +136,8 @@ public class LoginForm extends JMPCForm {
         new Thread(new Runnable(){
             @Override
             public void run() {
-                JMFunctions.trace(JMFunctions.getCurrentConnection().queryMySQL("select * from user", true).getString(1));
+                //JMFunctions.trace(JMFunctions.getCurrentConnection().queryMySQL("select * from user", true).getString(1));
+                JMWord.test(new File(JMPCFunctions.getResourcePath("raw/wordtest.docx").getPath()));
             }
         }).start();
     }//GEN-LAST:event_jButton1ActionPerformed
