@@ -5,12 +5,18 @@
  */
 package com.abal.arsipsuratkalawat;
 
+import com.thowo.jmjavaframework.JMDataContainer;
+import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.report.JMWord;
+import com.thowo.jmjavaframework.report.JMWordMM;
+import com.thowo.jmjavaframework.table.JMTable;
 import com.thowo.jmpcframework.JMPCFunctions;
 import com.thowo.jmpcframework.component.JMPCForm;
 import com.thowo.jmpcframework.component.JMPCLoadingSprite;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -25,6 +31,12 @@ public class LoginForm extends JMPCForm {
         initComponents();
         JMPCFunctions.panelBGImage(this.jPanel1, "img/Archive.jpg");
         super.setContent(this.jPanelMain, new JMPCLoadingSprite());
+    }
+    
+    private void tesMM(){
+        JMTable tbl=new JMTable(JMFunctions.getCurrentConnection().queryMySQL("select * from user", true));
+        new JMWordMM(tbl,"/home/jimi/Desktop/tespoi/wordtest1.docx","/home/jimi/Desktop/tespoi/res.docx");
+        JMFunctions.traceAndShow("MAIL MERGE DONE");
     }
 
     /**
@@ -136,8 +148,10 @@ public class LoginForm extends JMPCForm {
         new Thread(new Runnable(){
             @Override
             public void run() {
-                //JMFunctions.trace(JMFunctions.getCurrentConnection().queryMySQL("select * from user", true).getString(1));
-                JMWord.test(new File(JMPCFunctions.getResourcePath("raw/wordtest.docx").getPath()));
+                //JMFunctions.trace(JMFunctions.getCurrentConnection().queryMySQL("select * from user", true).getString(0));
+                //JMWord.test(new File(JMPCFunctions.getResourcePath("raw/wordtest.docx").getPath()));
+                //JMFunctions.trace(String.valueOf(true));
+                LoginForm.this.tesMM();
             }
         }).start();
     }//GEN-LAST:event_jButton1ActionPerformed
