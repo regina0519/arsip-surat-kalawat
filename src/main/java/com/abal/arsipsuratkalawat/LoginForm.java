@@ -144,16 +144,17 @@ public class LoginForm extends JMPCForm {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        
-        new Thread(new Runnable(){
+        new FormMain().setVisible(true);
+        /*new Thread(new Runnable(){
             @Override
             public void run() {
                 //JMFunctions.trace(JMFunctions.getCurrentConnection().queryMySQL("select * from user", true).getString(0));
                 //JMWord.test(new File(JMPCFunctions.getResourcePath("raw/wordtest.docx").getPath()));
                 //JMFunctions.trace(String.valueOf(true));
-                LoginForm.this.tesMM();
+                //LoginForm.this.tesMM();
+                new FormTes().setVisible(true);
             }
-        }).start();
+        }).start();*/
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed

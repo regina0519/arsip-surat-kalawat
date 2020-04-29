@@ -11,8 +11,15 @@ import com.thowo.jmpcframework.component.JMPCAsyncLoaderDefault;
 import com.thowo.jmpcframework.component.JMPCSplashForm;
 import com.thowo.jmpcframework.component.JMPCUIMessenger;
 import java.io.File;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.synth.SynthLookAndFeel;
+import javax.swing.plaf.synth.SynthStyleFactory;
 
 /**
  *
@@ -26,7 +33,8 @@ public class Main {
     
     
     public static void main(String[] args) {
-        // TODO code application logic here
+        
+        JMPCFunctions.initLookAndFeel(Main.class);
         new JMPCSplashForm(new LoginForm(),GitIgnoreDBConnection.getDBs()).setVisible(true);
     }
     

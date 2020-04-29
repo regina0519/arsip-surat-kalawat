@@ -1,0 +1,20 @@
+﻿<synth>
+    <style id="Panel">
+        <state>
+            <color value="WHITE" type="BACKGROUND"/>
+            <color value="BLACK" type="FOREGROUND"/>
+        </state>
+    </style>
+    <bind style="Panel" type="region" key="Panel"/>
+    
+    <style id="buttonStyle">
+        <insets top="15" left="20" right="20" bottom="15"/>
+        <state>
+            <imagePainter method="buttonBackground" path="/img/btn.png" sourceInsets="10 10 10 10"/>
+        </state>
+    </style>
+    <bind style="buttonStyle" type="name" key="dirt"/> 
+    
+    
+    
+</synth>
