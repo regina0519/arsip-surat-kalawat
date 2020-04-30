@@ -7,6 +7,7 @@ package com.abal.arsipsuratkalawat;
 
 import com.thowo.jmpcframework.component.JMPCForm;
 import com.thowo.jmpcframework.component.JMPCLoadingSprite;
+import java.awt.Color;
 
 /**
  *
@@ -21,10 +22,12 @@ public class FormMain extends JMPCForm {
         initComponents();
         super.setContent(this.jPanelMain, new JMPCLoadingSprite());
         this.initModule();
+        //this.jPanelMain.setBackground(new Color(0.0f,0.0f,0.0f,0.0f));
+        //this.setBackground(new Color(0.0f,0.0f,0.0f,0.0f));
     }
     
     public void initModule(){
-        TableOPD opd=TableOPD.create("select * from tes", this.jTable1);
+        TableTes tesTbl=TableTes.create("select * from tes", this.jTable1);
         
     }
 
@@ -205,6 +208,7 @@ public class FormMain extends JMPCForm {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**

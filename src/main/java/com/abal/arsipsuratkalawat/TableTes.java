@@ -9,23 +9,29 @@ import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.db.JMResultSet;
 import com.thowo.jmjavaframework.table.JMTable;
 import com.thowo.jmpcframework.JMPCFunctions;
+import com.thowo.jmpcframework.component.JMPCCellImageRenderer;
+import java.awt.Component;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author jimi
  */
-public class TableOPD {
+public class TableTes {
     private String queryView;
     private JMTable table;
     private JTable jTable;
     
-    public static TableOPD create(String query,JTable jTable){
-        return new TableOPD(query,jTable);
+    public static TableTes create(String query,JTable jTable){
+        return new TableTes(query,jTable);
     }
     
-    public TableOPD(String query,JTable jTable){
+    public TableTes(String query,JTable jTable){
         this.queryView=query;
         this.jTable=jTable;
         this.view(this.queryView);
@@ -46,7 +52,9 @@ public class TableOPD {
         model.addColumn("BOOL");
         model.addColumn("DATE");
         model.addColumn("DATETIME");
+        
         JMPCFunctions.linkTable(this.jTable, this.table);
-        //JMFunctions.trace("abis");
+        this.jTable.getColumnModel().getColumn(1).setCellRenderer(JMPCCellImageRenderer.create(this.getClass()));
     }
 }
+
