@@ -40,7 +40,7 @@ public class FormInput extends JMPCForm {
         paths.add("/home/jimi/Desktop/tes deploy/samples/inbox.png");
         paths.add("/home/jimi/Desktop/tes deploy/samples/outbox.png");
         paths.add("/home/jimi/Desktop/tes deploy/samples/splash.jpg");
-        this.imgs=JMPCImagesViewer.create(paths, 200, 300);
+        this.imgs=JMPCImagesViewer.create(paths, 200, 200);
         this.jPanel2.setLayout(new FlowLayout());
         this.jPanel2.add(this.imgs);
     }
