@@ -45,13 +45,13 @@ public class TableTes {
         DefaultTableModel model = (DefaultTableModel) this.jTable.getModel();
         model.setRowCount(0);
         model.setColumnCount(0);
-        model.addColumn("INT");
-        model.addColumn("STRING");
-        model.addColumn("TEXT");
-        model.addColumn("DOUBLE");
-        model.addColumn("BOOL");
-        model.addColumn("DATE");
-        model.addColumn("DATETIME");
+        model.addColumn(R.label("INT"));
+        model.addColumn(R.label("STRING"));
+        model.addColumn(R.label("TEXT"));
+        model.addColumn(R.label("DOUBLE"));
+        model.addColumn(R.label("BOOL"));
+        model.addColumn(R.label("DATE"));
+        model.addColumn(R.label("DATETIME"));
         
         JMPCFunctions.linkTable(this.jTable, this.table);
         this.jTable.getColumnModel().getColumn(1).setCellRenderer(JMPCCellImageRenderer.create(this.getClass()));

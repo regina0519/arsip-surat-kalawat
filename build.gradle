@@ -15,6 +15,6 @@ dependencies {
     implementation project(path: ':JMPCFramework:JMJavaFramework')
 }
 
-processResources{
+/*processResources{
     from('JMPCFramework/JMJavaFramework/src/main/res')
-}
+}*/

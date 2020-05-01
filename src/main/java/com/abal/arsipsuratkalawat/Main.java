@@ -8,7 +8,6 @@ package com.abal.arsipsuratkalawat;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmpcframework.JMPCFunctions;
 import com.thowo.jmpcframework.component.JMPCAsyncLoaderDefault;
-import com.thowo.jmpcframework.component.JMPCSplashForm;
 import com.thowo.jmpcframework.component.JMPCUIMessenger;
 import java.io.File;
 import java.text.ParseException;
@@ -33,9 +32,9 @@ public class Main {
     
     
     public static void main(String[] args) {
-        
         JMPCFunctions.initLookAndFeel(Main.class);
-        new JMPCSplashForm(new LoginForm(),GitIgnoreDBConnection.getDBs()).setVisible(true);
+        //new JMPCSplashForm(new LoginForm(),GitIgnoreDBConnection.getDBs(),"img/splash.jpg",Main.class,"id_ID").setVisible(true);
+        new SplashScreen().setVisible(true);
     }
     
 }

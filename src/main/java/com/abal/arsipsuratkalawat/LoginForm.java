@@ -31,6 +31,7 @@ public class LoginForm extends JMPCForm {
         initComponents();
         JMPCFunctions.panelBGImage(this.jPanel1, "img/Archive.jpg");
         super.setContent(this.jPanelMain, new JMPCLoadingSprite());
+        
     }
     
     private void tesMM(){
@@ -144,7 +145,7 @@ public class LoginForm extends JMPCForm {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        new FormMain().setVisible(true);
+        new FormInput().setVisible(true);
         /*new Thread(new Runnable(){
             @Override
             public void run() {
