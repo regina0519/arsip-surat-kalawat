@@ -16,6 +16,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 /**
  *
@@ -31,7 +32,9 @@ public class FormInput extends JMPCForm {
         initComponents();
         super.setContent(this.jPanelMain, new JMPCLoadingSprite());
     }
-    
+    public JPanel getInputPanel(){
+        return this.jPanel2;
+    }
     public void tesImgs(){
         List<String> paths=new ArrayList();
         paths.add("/home/jimi/Desktop/tes deploy/samples/admin_settings.jpeg");
@@ -61,11 +64,11 @@ public class FormInput extends JMPCForm {
         jPanel3 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanelMain.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        jPanelMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel1.setText("jLabel1");
 
@@ -86,7 +89,7 @@ public class FormInput extends JMPCForm {
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -99,7 +102,7 @@ public class FormInput extends JMPCForm {
             .addGap(0, 352, Short.MAX_VALUE)
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jButton1.setText("jButton1");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -174,7 +177,7 @@ public class FormInput extends JMPCForm {
         this.tesImgs();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    /**
+    /**h
      * @param args the command line arguments
      */
     public static void main(String args[]) {

@@ -15,7 +15,7 @@ import java.awt.Color;
  */
 public class FormMain extends JMPCForm {
 
-    /**
+    /**h
      * Creates new form FormMain
      */
     public FormMain() {
