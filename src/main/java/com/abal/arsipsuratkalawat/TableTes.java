@@ -8,6 +8,7 @@ package com.abal.arsipsuratkalawat;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.db.JMResultSet;
 import com.thowo.jmjavaframework.db.JMResultSetStyle;
+import com.thowo.jmjavaframework.table.JMRow;
 import com.thowo.jmjavaframework.table.JMTable;
 import com.thowo.jmpcframework.JMPCFunctions;
 import com.thowo.jmpcframework.component.JMPCCellImageRenderer;
@@ -16,6 +17,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -51,9 +54,14 @@ public class TableTes {
         JMResultSetStyle style=JMResultSetStyle.create(rs.getSQLResultSet());
         style=style.setColHidden(0);
         this.table=JMTable.create(rs,style);
+        this.table.setName("tes");
+        this.table.addKeyColumn(0);
+        
+        
+        
         
         DefaultTableModel model = (DefaultTableModel) this.jTable.getModel();
-        model.setRowCount(0);
+        //model.setRowCount(0);
         model.setColumnCount(0);
         model.addColumn(R.label("INT"));
         model.addColumn(R.label("STRING"));
@@ -75,7 +83,14 @@ public class TableTes {
     
     private void openForm(){
         if(TableTes.this.jTable.getSelectedRow()>=0){
-            InputTes.create(new FormInput());
+            DefaultTableModel model = (DefaultTableModel) this.jTable.getModel();
+            String key=(String) model.getValueAt(this.jTable.getSelectedRow(), 0);
+            JMFunctions.trace(key);
+            JMRow tmp=this.table.findString(key, 0);
+            JMFunctions.trace(tmp.getCells().get(0).getText());
+            InputTes.create(new FormInput(),this.table);
+            //this.table.deleteRow(tmp);
+            //JMPCFunctions.linkTable(this.jTable, this.table);
         }
     }
     

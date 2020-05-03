@@ -5,9 +5,14 @@
  */
 package com.abal.arsipsuratkalawat;
 
+import com.thowo.jmjavaframework.JMFormatCollection;
+import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmpcframework.component.JMPCForm;
 import com.thowo.jmpcframework.component.JMPCLoadingSprite;
 import java.awt.Color;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,8 +27,6 @@ public class FormMain extends JMPCForm {
         initComponents();
         super.setContent(this.jPanelMain, new JMPCLoadingSprite());
         this.initModule();
-        //this.jPanelMain.setBackground(new Color(0.0f,0.0f,0.0f,0.0f));
-        //this.setBackground(new Color(0.0f,0.0f,0.0f,0.0f));
     }
     
     public void initModule(){

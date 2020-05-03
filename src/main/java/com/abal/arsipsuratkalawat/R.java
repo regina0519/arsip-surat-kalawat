@@ -35,4 +35,11 @@ public class R {
         }
         return ResourceBundle.getBundle("localization/Labels",l).getString(var);
     }
+    public static String error(String var){
+        Locale l=new Locale(lang,reg);
+        if(l==null){
+            l=new Locale(langDef,regDef);
+        }
+        return ResourceBundle.getBundle("localization/errors",l).getString(var);
+    }
 }
