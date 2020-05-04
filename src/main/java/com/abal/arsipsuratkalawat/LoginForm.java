@@ -5,6 +5,7 @@
  */
 package com.abal.arsipsuratkalawat;
 
+import com.abal.arsipsuratkalawat.gina.FormMenu;
 import com.thowo.jmjavaframework.JMDataContainer;
 import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;

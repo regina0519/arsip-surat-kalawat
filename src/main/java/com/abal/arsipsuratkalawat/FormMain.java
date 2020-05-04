@@ -30,7 +30,7 @@ public class FormMain extends JMPCForm {
     }
     
     public void initModule(){
-        TableTes tesTbl=TableTes.create("select * from tes", this.jTable1);
+        TableTes tesTbl=TableTes.create("select * from tes", this.jTable1,this.jPanel6);
         
     }
 

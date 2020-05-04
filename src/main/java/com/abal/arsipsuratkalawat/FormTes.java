@@ -5,8 +5,10 @@
  */
 package com.abal.arsipsuratkalawat;
 import com.thowo.jmjavaframework.JMFunctions;
+import com.thowo.jmjavaframework.JMVec2;
 import com.thowo.jmjavaframework.db.JMResultSet;
 import com.thowo.jmpcframework.JMPCFunctions;
+import com.thowo.jmpcframework.component.JMPCButton;
 import com.thowo.jmpcframework.component.JMPCForm;
 import com.thowo.jmpcframework.component.JMPCLoadingSprite;
 import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblaf;
@@ -14,6 +16,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.util.logging.Level;
@@ -197,34 +201,27 @@ public class FormTes extends JMPCForm{
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        this.tesInput=JMPCInputStringTFWeblaf.create("value", "", "error", "Tes", "hahah", 10,400,true);
+        /*this.tesInput=JMPCInputStringTFWeblaf.create("value", "", "error", "Tes", "hahah", 10,400,true);
         this.tesInput2=JMPCInputStringTFWeblaf.create("value2", "", "error2", "Tes tes tes tes", "hahah2", 20,400,true);
 
         Box box=Box.createVerticalBox();
-        //this.jPanel1.setLayout(new FlowLayout(FlowLayout));
         box.add(this.tesInput);
         box.add(this.tesInput2);
         //box.setBorder(BorderFactory.createLineBorder(Color.WHITE));
         this.jPanel1.setLayout(new FlowLayout());
-        this.jPanel1.add(box);
-        //SynthLookAndFeel a;
-        //this.jTextField1.setOpaque(false);
-        //this.jTextField1.setLayout(new OverlayLayout(this.jTextField1));
-        //this.jTextField1.add(JMPCFunctions.getImage("img/inbox.png", this.getClass()),-1);
-
-        //this.jTextField1.rep
-        //Graphics g=this.jTextField1.getGraphics();
-
-        //g.drawImage(JMPCFunctions.getImageImg("img/inbox.png", this.getClass()), 0, 0, null);
-
-        //g.drawString("hohoho", 0, 0);
-
-        //this.jTextField1.paintComponents(g);
-        //this.jTextField1.paint(g);
-        //this.jTextField1.repaint();
-
-        //JLabel tes=JMPCFunctions.getImage("img/inbox.png", null);
-        //this.jButton2.setIcon(tes.getIcon());
+        this.jPanel1.add(box);*/
+        
+        JMPCButton tmp=JMPCButton.create("jimi",JMVec2.create(100, 20)).decreaseFontSize(0).addIconLeft("img/inbox.png", this.getClass()).addIconRight("img/outbox.png", this.getClass()).addIconTop("img/inbox.png", this.getClass()).addIconBottom("img/inbox.png", this.getClass());
+        tmp.setLocked(true);
+        tmp.setLocked(false);
+        tmp.setAction(new Runnable(){
+            @Override
+            public void run() {
+                JMFunctions.trace("JADI");
+            }
+        });
+        this.jPanel1.setLayout(new FlowLayout());
+        this.jPanel1.add(tmp);
         new Thread(new Runnable(){
             @Override
             public void run() {
