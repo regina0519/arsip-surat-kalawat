@@ -54,7 +54,7 @@ public class FormSM extends javax.swing.JFrame {
     private void loadData(){
         String q="select * from surat_masuk";
         JMResultSet r=JMFunctions.getCurrentConnection().queryMySQL(q, true);
-        JMPCFunctions.linkTable(tblMain, JMTable.create(r));
+        //JMPCFunctions.linkTable(tblMain, JMTable.create(r));
     }
     
     private void updateDBDel(){

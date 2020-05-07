@@ -6,8 +6,10 @@
 package com.abal.arsipsuratkalawat;
 
 import com.thowo.jmjavaframework.JMDataContainer;
+import com.thowo.jmjavaframework.JMDate;
 import com.thowo.jmjavaframework.JMFormInterface;
 import com.thowo.jmjavaframework.JMFunctions;
+import com.thowo.jmjavaframework.JMInputInterface;
 import com.thowo.jmjavaframework.db.JMResultSet;
 import com.thowo.jmjavaframework.db.JMResultSetStyle;
 import com.thowo.jmjavaframework.table.JMRow;
@@ -18,6 +20,8 @@ import com.thowo.jmpcframework.component.form.JMPCDBButtonGroup;
 import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblaf;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
@@ -35,7 +39,7 @@ import javax.swing.WindowConstants;
 public class InputTes implements JMFormInterface {
     private String title=R.label("TITLE_TES");
     private JMTable table;
-    private FormInput form;
+    private FormInput form=new FormInput();
     
     private JMPCInputStringTFWeblaf fInt;
     private JMPCInputStringTFWeblaf fString;
@@ -46,22 +50,18 @@ public class InputTes implements JMFormInterface {
     private JMPCInputStringTFWeblaf fDateTime;
     private JMRow row;
     private JMPCDBButtonGroup btnGroup;
-    private TableTes tableTes;
     private boolean adding=false;
+    private boolean editMode=false;
+    private boolean formClosing=false;
     
-    public static InputTes create(FormInput form, JMTable table,JMPCDBButtonGroup btnGroup){
-        return new InputTes(form, table,btnGroup);
+    public static InputTes create(JMTable table){
+        return new InputTes(table);
     }
     
-    public InputTes setTableTes(TableTes tableTes){
-        this.tableTes=tableTes;
-        return this;
-    }
-    public InputTes(FormInput form, JMTable table, JMPCDBButtonGroup btnGroup){
-        this.form=form;
+    public InputTes(JMTable table){
         this.table=table;
-        this.btnGroup=btnGroup;
-        this.btnGroup.setFormInterface(this);
+        this.table.addInterface(this);
+        this.btnGroup=JMPCDBButtonGroup.create(table);
         JPanel pnlButtons=form.getButtonsPanel();
         pnlButtons.setLayout(new BorderLayout());
         pnlButtons.add(this.btnGroup.getEditorPanel(),BorderLayout.WEST);
@@ -88,13 +88,13 @@ public class InputTes implements JMFormInterface {
         this.fDate=JMPCInputStringTFWeblaf.create(R.label("DATE"),"Input date", 15, width, horizontal).setEditable(true);
         this.fDateTime=JMPCInputStringTFWeblaf.create(R.label("DATETIME"),"Input date time", 20, width, horizontal).setEditable(true);
         
-        this.table.setFormInterface(this.fInt, 0);
-        this.table.setFormInterface(this.fString, 1);
-        this.table.setFormInterface(this.fText, 2);
-        this.table.setFormInterface(this.fDouble, 3);
-        this.table.setFormInterface(this.fBool, 4);
-        this.table.setFormInterface(this.fDate, 5);
-        this.table.setFormInterface(this.fDateTime, 6);
+        this.table.setFormInterface(this.fInt, 0,true);
+        this.table.setFormInterface(this.fString, 1,true);
+        this.table.setFormInterface(this.fText, 2,true);
+        this.table.setFormInterface(this.fDouble, 3,true);
+        this.table.setFormInterface(this.fBool, 4,true);
+        this.table.setFormInterface(this.fDate, 5,true);
+        this.table.setFormInterface(this.fDateTime, 6,true);
         
         
         //List<Integer> excludedUpdateCols=new ArrayList();
@@ -102,7 +102,7 @@ public class InputTes implements JMFormInterface {
         //excludedUpdateCols.add(2);
         //this.table.excludeColumnsFromUpdate(excludedUpdateCols);
         //JMFunctions.trace(this.row.getUpdateSQL());
-        this.row.displayInterface();
+        this.row.displayInterface(true);
         this.fInt.setVisible(true);
         
         Box box=Box.createVerticalBox();
@@ -125,15 +125,18 @@ public class InputTes implements JMFormInterface {
     }
     
     public InputTes setEditMode(boolean editMode){
-        this.fInt.setEditMode(editMode);
-        this.fString.setEditMode(editMode);
-        this.fText.setEditMode(editMode);
-        this.fDouble.setEditMode(editMode);
-        this.fBool.setEditMode(editMode);
-        this.fDate.setEditMode(editMode);
-        this.fDateTime.setEditMode(editMode);
+        this.editMode=editMode;
+        this.fInt.setEditMode(editMode,this.row);
+        this.fString.setEditMode(editMode,this.row);
+        this.fText.setEditMode(editMode,this.row);
+        this.fDouble.setEditMode(editMode,this.row);
+        this.fBool.setEditMode(editMode,this.row);
+        this.fDate.setEditMode(editMode,this.row);
+        this.fDateTime.setEditMode(editMode,this.row);
         return this;
     }
+    
+    
     
     private void addListener(){
         this.form.addWindowListener(new WindowListener(){
@@ -144,16 +147,12 @@ public class InputTes implements JMFormInterface {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                if(InputTes.this.fInt.onEditMode()){
-                    int res=JMFunctions.confirmBoxYN(InputTes.this.title, R.label("MESSAGE_CLOSE_ON_EDIT_MODE"), R.label("YES"), R.label("NO"), true);
-                    if(res==JOptionPane.NO_OPTION)InputTes.this.form.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-                    else {
-                        InputTes.this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                    }
+                if(InputTes.this.editMode){
+                    InputTes.this.formClosing=true;
+                    InputTes.this.btnGroup.btnCancelClick();
+                }else{
+                    InputTes.this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 }
-                JMPCFunctions.linkTable(InputTes.this.tableTes.getJTable(), InputTes.this.table);
-                InputTes.this.tableTes.getButtonGroup().stateInit();
             }
 
             @Override
@@ -181,33 +180,63 @@ public class InputTes implements JMFormInterface {
                 //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
+        this.btnGroup.getBtnEdit().addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                InputTes.this.setEditMode(true);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                
+            }
+        });
     }
 
+
     @Override
-    public void actionAdd() {
+    public void actionAdd(JMRow rowAdded) {
+        this.row=rowAdded;
         this.setEditMode(true);
-        this.row=this.table.addNewRow(true);
         
         this.adding=true;
         JMResultSet r=JMFunctions.getCurrentConnection().queryMySQL("select * from tes order by f_int desc", false);
-        int v=r.getInt(0);
+        Integer v=r.getInt(0);
         v++;
-        this.fInt.setText(String.valueOf(v));
+        //this.fInt.setText(String.valueOf(v));
+        JMFunctions.trace(this.row.getRowNum()+"");
     }
 
     @Override
-    public void actionDelete() {
-        if(JMFunctions.confirmBoxYN(R.label("TITLE_TES"), R.label("MESSAGE_CONFIRM_DELETE"), R.label("YES"), R.label("NO"), true)==JOptionPane.YES_OPTION){
+    public void actionDelete(JMRow rowDeleted) {
+        this.adding=false;
+        this.setEditMode(false);
+        /*if(JMFunctions.confirmBoxYN(R.label("TITLE_TES"), R.label("MESSAGE_CONFIRM_DELETE"), R.label("YES"), R.label("NO"), true)==JOptionPane.YES_OPTION){
             this.table.deleteRow(this.row,true);
             this.row=this.table.getCurrentRow();
             this.setEditMode(false);
             this.adding=false;
             this.btnGroup.stateNav();
-        }
+        }*/
     }
 
     @Override
-    public void actionSave() {
+    public void actionSave(String updateQuery) {
         JMFunctions.trace("BABI========     "+this.row.getUpdateSQL());
         this.setEditMode(false);
         this.adding=false;
@@ -221,60 +250,64 @@ public class InputTes implements JMFormInterface {
     }
 
     @Override
-    public void actionEdit() {
+    public void actionEdit(JMRow rowEdited) {
+        this.row=rowEdited;
         this.setEditMode(true);
         this.adding=false;
     }
 
     @Override
-    public void actionPrint() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void actionPrint(JMRow rowPrinted) {
+        this.row=rowPrinted;
     }
 
     @Override
-    public void actionRefresh() {
-        //JMPCFunctions.linkTable(this.tableTes.getJTable(), table);
-        //this.btnGroup.stateNav();
+    public void actionRefresh(JMRow rowRefreshed) {
+        this.row=rowRefreshed;
     }
 
     @Override
-    public void actionView() {
-        //NOTHING
+    public void actionView(JMRow rowViewed) {
+        this.row=rowViewed;
     }
 
     @Override
-    public void actionNext() {
-        this.row=this.table.nextRow(true);
-        this.btnGroup.stateNav();
+    public void actionNext(JMRow nextRow) {
+        this.row=nextRow;
     }
 
     @Override
-    public void actionPrev() {
-        this.row=this.table.prevRow(true);
-        this.btnGroup.stateNav();
+    public void actionPrev(JMRow prevRow) {
+        this.row=prevRow;
     }
 
     @Override
-    public void actionFirst() {
-        this.row=this.table.firstRow(true);
-        this.btnGroup.stateNav();
+    public void actionFirst(JMRow firstRow) {
+        this.row=firstRow;
     }
 
     @Override
-    public void actionLast() {
-        this.row=this.table.lastRow(true);
-        this.btnGroup.stateNav();
+    public void actionLast(JMRow lastRow) {
+        this.row=lastRow;
     }
 
     @Override
-    public void actionCancel() {
-        this.setEditMode(false);
-        if(this.adding){
-            this.table.deleteRow(this.row,true);
-            this.row=this.table.getCurrentRow();
+    public void gotoRecord(JMRow currentRow) {
+        this.row=currentRow;
+    }
+
+    @Override
+    public void actionCancel(JMRow rowCanceled, boolean canceled) {
+        if(this.formClosing){
+            if(canceled){
+                this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            }else{
+                InputTes.this.form.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+            }
+        }else{
+            this.setEditMode(!canceled);
+            if(canceled)this.row=rowCanceled;
         }
-        this.adding=false;
-        this.btnGroup.stateNav();
     }
     
 }
