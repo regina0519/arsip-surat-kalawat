@@ -39,7 +39,7 @@ public class FormSMDet extends JMPCForm {
         this.state=state;
         String q="select * from surat_masuk where id_sm='"+keyValue+"'";
         JMResultSet rs=JMFunctions.getCurrentConnection().queryMySQL(q, true);
-        this.tbl=JMTable.create(rs);
+        //this.tbl=JMTable.create(rs);
       
         
         this.setState();

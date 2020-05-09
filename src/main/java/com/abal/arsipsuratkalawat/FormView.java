@@ -5,34 +5,23 @@
  */
 package com.abal.arsipsuratkalawat;
 
-import com.thowo.jmjavaframework.JMFunctions;
-import com.thowo.jmjavaframework.JMVec2;
-import com.thowo.jmpcframework.JMPCFunctions;
-import com.thowo.jmpcframework.component.JMPCForm;
-import com.thowo.jmpcframework.component.JMPCImagesViewer;
+import com.thowo.jmpcframework.component.JMPCFormModal;
 import com.thowo.jmpcframework.component.JMPCLoadingSprite;
-import java.awt.FlowLayout;
-import java.awt.Image;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 /**
  *
  * @author jimi
  */
-public class FormInput extends JMPCForm {
-    private JMPCImagesViewer imgs;
-    
+public class FormView extends JMPCFormModal {
+
     /**
-     * Creates new form FormInput
+     * Creates new form FormView
      */
-    public FormInput() {
+    public FormView(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
         super.setContent(this.jPanelMain, new JMPCLoadingSprite());
-        this.setAlwaysOnTop(true);
-        
     }
     public JPanel getInputPanel(){
         return this.jPanel2;
@@ -42,18 +31,6 @@ public class FormInput extends JMPCForm {
     }
     public void setTitle(String title){
         this.jLabel1.setText(title);
-    }
-    public void tesImgs(){
-        List<String> paths=new ArrayList();
-        paths.add("/home/jimi/Desktop/tes deploy/samples/admin_settings.jpeg");
-        paths.add("/home/jimi/Desktop/tes deploy/samples/Archive.jpg");
-        paths.add("/home/jimi/Desktop/tes deploy/samples/btn.png");
-        paths.add("/home/jimi/Desktop/tes deploy/samples/inbox.png");
-        paths.add("/home/jimi/Desktop/tes deploy/samples/outbox.png");
-        paths.add("/home/jimi/Desktop/tes deploy/samples/splash.jpg");
-        this.imgs=JMPCImagesViewer.create(paths, 200, 200);
-        this.jPanel2.setLayout(new FlowLayout());
-        this.jPanel2.add(this.imgs);
     }
 
     /**
@@ -107,7 +84,7 @@ public class FormInput extends JMPCForm {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 339, Short.MAX_VALUE)
+            .addGap(0, 354, Short.MAX_VALUE)
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -116,7 +93,7 @@ public class FormInput extends JMPCForm {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 753, Short.MAX_VALUE)
+            .addGap(0, 815, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,7 +145,7 @@ public class FormInput extends JMPCForm {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    /**h
+    /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -185,20 +162,27 @@ public class FormInput extends JMPCForm {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FormInput.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FormInput.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FormInput.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FormInput.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormInput().setVisible(true);
+                FormView dialog = new FormView(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }

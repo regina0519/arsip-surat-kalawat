@@ -18,6 +18,7 @@ import com.thowo.jmpcframework.component.JMPCLoadingSprite;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JComponent;
 
 /**
  *
@@ -32,7 +33,6 @@ public class LoginForm extends JMPCForm {
         initComponents();
         JMPCFunctions.panelBGImage(this.jPanel1, "img/Archive.jpg");
         super.setContent(this.jPanelMain, new JMPCLoadingSprite());
-        
     }
     
     private void tesMM(){
@@ -59,6 +59,7 @@ public class LoginForm extends JMPCForm {
         jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
         jLabel2.setText("Nama user:");
 
@@ -146,6 +147,7 @@ public class LoginForm extends JMPCForm {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        this.setVisible(false);
         new FormMain().setVisible(true);
         /*new Thread(new Runnable(){
             @Override

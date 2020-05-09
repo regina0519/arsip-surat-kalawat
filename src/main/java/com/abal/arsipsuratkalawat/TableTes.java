@@ -11,51 +11,44 @@ import com.thowo.jmjavaframework.db.JMResultSet;
 import com.thowo.jmjavaframework.db.JMResultSetStyle;
 import com.thowo.jmjavaframework.table.JMRow;
 import com.thowo.jmjavaframework.table.JMTable;
-import com.thowo.jmpcframework.JMPCFunctions;
 import com.thowo.jmpcframework.component.JMPCTable;
 import com.thowo.jmpcframework.component.form.JMPCDBButtonGroup;
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.SwingUtilities;
 
 /**
  *
  * @author jimi
  */
 public class TableTes implements JMFormInterface{
-    private String queryView;
-    private JMTable dbObject;
-    private JMPCTable table;
-    private JMPCDBButtonGroup btnGroup;
-    private List<Integer> primaryKeys;
+    private final String title=R.label("TITLE_TES");
+    private final String queryView;
+    private final JMTable dbObject;
+    private final JMPCTable table;
+    private final JMPCDBButtonGroup btnGroup;
+    private final List<Integer> primaryKeys;
+    private final FormMain parent;
     
-    public static TableTes create(String query,JPanel pnlTable, JPanel pnlButtons){
-        return new TableTes(query,pnlTable, pnlButtons);
+    public static TableTes create(String query,FormMain parent){
+        return new TableTes(query,parent);
     }
     
-    public TableTes(String query,JPanel pnlTable, JPanel pnlButtons){
+    public TableTes(String query,FormMain parent){
+        this.parent=parent;
         this.queryView=query;
-        JMResultSet rs=JMFunctions.getCurrentConnection().queryMySQL(this.queryView, true);
         Object[] boolImg={JMFunctions.getResourcePath("img/inbox.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/outbox.png", this.getClass()).getPath()};
         
-        JMResultSetStyle style=JMResultSetStyle.create(rs).setColHidden(0)
+        this.dbObject=JMTable.create(this.queryView,JMTable.DBTYPE_MYSQL);
+        
+        this.dbObject.getStyle().setColHidden(0)
                 .setLabel(0,R.label("INT"))
                 .setLabel(1,R.label("STRING"))
                 .setLabel(2,R.label("TEXT"))
@@ -64,7 +57,11 @@ public class TableTes implements JMFormInterface{
                 .setLabel(5,R.label("DATE"))
                 .setLabel(6,R.label("DATETIME"))
                 .addFormat(4, JMResultSetStyle.FORMAT_IMAGE, boolImg);
-        this.dbObject=JMTable.create(rs,style);
+        this.dbObject.refresh();
+        //List<Integer> excluded=new ArrayList();
+        //excluded.add(1);
+        //excluded.add(3);
+        //this.dbObject.excludeColumnsFromUpdate(excluded);
         this.dbObject.addInterface(this);
         this.dbObject.setName("tes");
         this.primaryKeys=new ArrayList();
@@ -73,10 +70,12 @@ public class TableTes implements JMFormInterface{
         
         this.table=JMPCTable.create(this.dbObject);
         JScrollPane sp=new JScrollPane(this.table);
+        JPanel pnlTable=parent.getPanelTable();
         pnlTable.setLayout(new BorderLayout());
         pnlTable.add(sp,BorderLayout.CENTER);
         
-        this.btnGroup=new JMPCDBButtonGroup(this.dbObject);
+        this.btnGroup=new JMPCDBButtonGroup(this.dbObject,this.title,false,false);
+        JPanel pnlButtons=parent.getPanelButtons();
         pnlButtons.setLayout(new BorderLayout());
         pnlButtons.add(this.btnGroup.getEditorPanel(),BorderLayout.WEST);
         pnlButtons.add(this.btnGroup.getNavigationPanel(),BorderLayout.EAST);
@@ -92,8 +91,8 @@ public class TableTes implements JMFormInterface{
         
     }
     
-    private void openForm(boolean editMode){
-        InputTes.create(this.dbObject).setEditMode(editMode);
+    private void openForm(boolean editing, boolean adding){
+        InputTes.create(TableTes.this.dbObject,parent,editing,adding);
     }
     
     
@@ -112,7 +111,7 @@ public class TableTes implements JMFormInterface{
             @Override
             public void keyReleased(KeyEvent e) {
                 if(e.getKeyCode()==e.VK_ENTER){
-                    TableTes.this.openForm(false);
+                    TableTes.this.openForm(false,false);
                 }
             }
         });
@@ -121,7 +120,7 @@ public class TableTes implements JMFormInterface{
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount()==2 && !e.isConsumed()){
-                    TableTes.this.openForm(false);
+                    TableTes.this.openForm(false,false);
                 }
             }
 
@@ -146,7 +145,24 @@ public class TableTes implements JMFormInterface{
             }
         });
         
-        
+        this.btnGroup.getBtnAdd().addAction(new Runnable(){
+            @Override
+            public void run() {
+                TableTes.this.openForm(true,true);
+            }
+        });
+        this.btnGroup.getBtnEdit().addAction(new Runnable(){
+            @Override
+            public void run() {
+                TableTes.this.openForm(true,false);
+            }
+        });
+        this.btnGroup.getBtnView().addAction(new Runnable(){
+            @Override
+            public void run() {
+                TableTes.this.openForm(false,false);
+            }
+        });
     }
     
     public JMPCDBButtonGroup getButtonGroup(){
@@ -157,68 +173,78 @@ public class TableTes implements JMFormInterface{
     }
     
 
+    
+    
+
     @Override
-    public void actionAdd(JMRow rowAdded) {
+    public void actionAfterAdded(JMRow rowAdded) {
+        JMFunctions.trace("ADDED RESPONSE FROM TABLE TES");
+        JMResultSet r=JMFunctions.getCurrentConnection().queryMySQL("select * from tes order by f_int desc", false);
+        Integer v=1;
+        if(r.first()){
+            v=r.getInt(0);
+            v++;
+        }
+        rowAdded.setValueFromString(0, String.valueOf(v));
+    }
+
+    @Override
+    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted) {
         
     }
 
     @Override
-    public void actionDelete(JMRow rowDeleted) {
+    public void actionAfterSaved(String updateQuery,boolean saved) {
         
     }
 
     @Override
-    public void actionSave(String updateQuery) {
+    public void actionAfterEdited(JMRow rowEdited) {
         
     }
 
     @Override
-    public void actionEdit(JMRow rowEdited) {
-        //JMFunctions.trace("Tabel row" + this.dbObject.getCurrentRow().getRowNum());
-    }
-
-    @Override
-    public void actionPrint(JMRow rowPrinted) {
+    public void actionAfterPrinted(JMRow rowPrinted) {
         
     }
 
     @Override
-    public void actionRefresh(JMRow rowRefreshed) {
+    public void actionAfterRefreshed(JMRow rowRefreshed) {
         
     }
 
     @Override
-    public void actionView(JMRow rowViewed) {
+    public void actionAfterViewed(JMRow rowViewed) {
         
     }
 
     @Override
-    public void actionNext(JMRow nextRow) {
-        //this.table.setRowSelectionInterval(nextRow.getRowNum(), 0);
-    }
-
-    @Override
-    public void actionPrev(JMRow prevRow) {
+    public void actionAfterMovedNext(JMRow nextRow) {
         
     }
 
     @Override
-    public void actionFirst(JMRow firstRow) {
+    public void actionAfterMovedPrev(JMRow prevRow) {
         
     }
 
     @Override
-    public void actionLast(JMRow lastRow) {
+    public void actionAfterMovedFirst(JMRow firstRow) {
         
     }
 
     @Override
-    public void gotoRecord(JMRow currentRow) {
+    public void actionAfterMovedLast(JMRow lastRow) {
         
     }
 
     @Override
-    public void actionCancel(JMRow rowCanceled, boolean canceled) {
+    public void actionAfterMovedtoRecord(JMRow currentRow) {
+        
+    }
+
+    @Override
+    public void actionAfterCanceled(JMRow rowCanceled, boolean canceled) {
         
     }
     

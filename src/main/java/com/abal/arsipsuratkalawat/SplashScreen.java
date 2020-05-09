@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -103,11 +104,25 @@ public class SplashScreen extends javax.swing.JFrame {
             @Override
             public void run() {
                 JMFunctions.setConnection(new JMConnection((File)GitIgnoreDBConnection.getDBs().get(0),(JMDBMySQL)GitIgnoreDBConnection.getDBs().get(1)));
-                new LoginForm().setVisible(true);
-                SplashScreen.this.setVisible(false);
+                SwingUtilities.invokeLater(new Runnable(){
+                    @Override
+                    public void run() {
+                        if(!JMFunctions.getCurrentConnection().mySQLConnected()){
+                            JMFunctions.traceAndShow("NDA");
+                            System.exit(0);
+                        }else{
+                            new LoginForm().setVisible(true);
+                            SplashScreen.this.setVisible(false);
+                        }
+                    }
+                });
             }
         });
         t.start();
+        
+        //JMFunctions.setConnection(new JMConnection((File)GitIgnoreDBConnection.getDBs().get(0),(JMDBMySQL)GitIgnoreDBConnection.getDBs().get(1)));
+        //new LoginForm().setVisible(true);
+        //SplashScreen.this.setVisible(false);
     }//GEN-LAST:event_formFocusGained
 
     /**

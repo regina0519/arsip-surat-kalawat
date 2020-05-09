@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JPanel;
 
 /**
  *
@@ -27,13 +28,20 @@ public class FormMain extends JMPCForm {
         initComponents();
         super.setContent(this.jPanelMain, new JMPCLoadingSprite());
         this.initModule();
-        super.toggleFullscreen(true);
+        //super.toggleFullscreen(true);
         
     }
     
+    public JPanel getPanelTable(){
+        return this.jPanel5;
+    }
+    public JPanel getPanelButtons(){
+        return this.jPanel6;
+    }
+    
     public void initModule(){
-        TableTes tesTbl=TableTes.create("select * from tes", this.jPanel5,this.jPanel6);
-        
+        TableTes tesTbl=TableTes.create("select * from tes", FormMain.this);
+        FormMain.this.pack();
     }
 
     /**
