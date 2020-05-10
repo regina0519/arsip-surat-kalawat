@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.abal.arsipsuratkalawat;
+package com.abal.arsipsuratkalawat.tables;
 
+import com.abal.arsipsuratkalawat.FormMain;
+import com.abal.arsipsuratkalawat.R;
 import com.thowo.jmjavaframework.JMFormInterface;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.db.JMResultSet;
@@ -13,6 +15,7 @@ import com.thowo.jmjavaframework.table.JMRow;
 import com.thowo.jmjavaframework.table.JMTable;
 import com.thowo.jmpcframework.component.JMPCTable;
 import com.thowo.jmpcframework.component.form.JMPCDBButtonGroup;
+import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblaf;
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -22,14 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 
 /**
  *
  * @author jimi
  */
-public class TableTes implements JMFormInterface{
-    private final String title=R.label("TITLE_TES");
+public class TableOPD implements JMFormInterface{
+    private final String title=R.label("TITLE_OPD");
     private final String queryView;
     private final JMTable dbObject;
     private final JMPCTable table;
@@ -37,33 +39,27 @@ public class TableTes implements JMFormInterface{
     private final List<Integer> primaryKeys;
     private final FormMain parent;
     
-    public static TableTes create(String query,FormMain parent){
-        return new TableTes(query,parent);
+    public static TableOPD create(String query,FormMain parent){
+        return new TableOPD(query,parent);
     }
     
-    public TableTes(String query,FormMain parent){
+    public TableOPD(String query,FormMain parent){
         this.parent=parent;
         this.queryView=query;
-        Object[] boolImg={JMFunctions.getResourcePath("img/inbox.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/outbox.png", this.getClass()).getPath()};
+        //Object[] boolImg={JMFunctions.getResourcePath("img/inbox.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/outbox.png", this.getClass()).getPath()};
         
         this.dbObject=JMTable.create(this.queryView,JMTable.DBTYPE_MYSQL);
         
-        this.dbObject.getStyle().setColHidden(0)
-                .setLabel(0,R.label("INT"))
-                .setLabel(1,R.label("STRING"))
-                .setLabel(2,R.label("TEXT"))
-                .setLabel(3,R.label("DOUBLE"))
-                .setLabel(4,R.label("BOOL"))
-                .setLabel(5,R.label("DATE"))
-                .setLabel(6,R.label("DATETIME"))
-                .addFormat(4, JMResultSetStyle.FORMAT_IMAGE, boolImg);
+        this.dbObject.getStyle()
+                .setLabel(0,R.label("ID_OPD"))
+                .setLabel(1,R.label("NAMA_OPD"));
         this.dbObject.refresh();
         //List<Integer> excluded=new ArrayList();
         //excluded.add(1);
         //excluded.add(3);
         //this.dbObject.excludeColumnsFromUpdate(excluded);
         this.dbObject.addInterface(this);
-        this.dbObject.setName("tes");
+        this.dbObject.setName("opd");
         this.primaryKeys=new ArrayList();
         this.primaryKeys.add(0);
         this.dbObject.setKeyColumns(this.primaryKeys);
@@ -71,11 +67,13 @@ public class TableTes implements JMFormInterface{
         this.table=JMPCTable.create(this.dbObject);
         JScrollPane sp=new JScrollPane(this.table);
         JPanel pnlTable=parent.getPanelTable();
+        pnlTable.removeAll();
         pnlTable.setLayout(new BorderLayout());
         pnlTable.add(sp,BorderLayout.CENTER);
         
         this.btnGroup=new JMPCDBButtonGroup(this.dbObject,this.title,false,false);
         JPanel pnlButtons=parent.getPanelButtons();
+        pnlButtons.removeAll();
         pnlButtons.setLayout(new BorderLayout());
         pnlButtons.add(this.btnGroup.getEditorPanel(),BorderLayout.WEST);
         pnlButtons.add(this.btnGroup.getNavigationPanel(),BorderLayout.EAST);
@@ -92,7 +90,7 @@ public class TableTes implements JMFormInterface{
     }
     
     private void openForm(boolean editing, boolean adding){
-        InputTes.create(TableTes.this.dbObject,parent,editing,adding);
+        InputOPD.create(TableOPD.this.dbObject,parent,editing,adding);
     }
     
     
@@ -111,7 +109,7 @@ public class TableTes implements JMFormInterface{
             @Override
             public void keyReleased(KeyEvent e) {
                 if(e.getKeyCode()==e.VK_ENTER){
-                    TableTes.this.openForm(false,false);
+                    TableOPD.this.openForm(false,false);
                 }
             }
         });
@@ -120,7 +118,7 @@ public class TableTes implements JMFormInterface{
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount()==2 && !e.isConsumed()){
-                    TableTes.this.openForm(false,false);
+                    TableOPD.this.openForm(false,false);
                 }
             }
 
@@ -148,19 +146,19 @@ public class TableTes implements JMFormInterface{
         this.btnGroup.getBtnAdd().addAction(new Runnable(){
             @Override
             public void run() {
-                TableTes.this.openForm(true,true);
+                TableOPD.this.openForm(true,true);
             }
         });
         this.btnGroup.getBtnEdit().addAction(new Runnable(){
             @Override
             public void run() {
-                TableTes.this.openForm(true,false);
+                TableOPD.this.openForm(true,false);
             }
         });
         this.btnGroup.getBtnView().addAction(new Runnable(){
             @Override
             public void run() {
-                TableTes.this.openForm(false,false);
+                TableOPD.this.openForm(false,false);
             }
         });
     }
@@ -171,15 +169,21 @@ public class TableTes implements JMFormInterface{
     public JMPCTable getTable(){
         return this.table;
     }
-    
+    public Runnable filter(JMPCInputStringTFWeblaf textField){
+        return new Runnable(){
+            @Override
+            public void run() {
+                TableOPD.this.dbObject.filter(textField.getText());
+            }
+        };
+    }
 
     
     
 
     @Override
     public void actionAfterAdded(JMRow rowAdded) {
-        JMFunctions.trace("ADDED RESPONSE FROM TABLE TES");
-        JMResultSet r=JMFunctions.getCurrentConnection().queryMySQL("select * from tes order by f_int desc", false);
+        JMResultSet r=JMFunctions.getCurrentConnection().queryMySQL("select * from opd order by id_opd desc", false);
         Integer v=1;
         if(r.first()){
             v=r.getInt(0);
@@ -250,19 +254,17 @@ public class TableTes implements JMFormInterface{
 
     @Override
     public void actionBeforeRefresh(JMRow rowRefreshed) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
+    @Override
+    public void actionAfterFiltered(String filter) {
+        this.parent.setSearch(filter);
+    }
 
     @Override
     public void actionBeforeFilter(String filter) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public void actionAfterFiltered(String filter) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
 }
-

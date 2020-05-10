@@ -3,8 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.abal.arsipsuratkalawat;
+package com.abal.arsipsuratkalawat.tables;
 
+import com.abal.arsipsuratkalawat.FormMain;
+import com.abal.arsipsuratkalawat.FormView;
+import com.abal.arsipsuratkalawat.InputTes;
+import com.abal.arsipsuratkalawat.R;
 import com.thowo.jmjavaframework.JMFormInterface;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.table.JMRow;
@@ -13,8 +17,6 @@ import com.thowo.jmpcframework.component.form.JMPCDBButtonGroup;
 import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblaf;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.Box;
@@ -25,29 +27,24 @@ import javax.swing.WindowConstants;
  *
  * @author jimi
  */
-public class InputTes implements JMFormInterface {
-    private final String title=R.label("TITLE_TES");
+public class InputSS implements JMFormInterface {
+    private final String title=R.label("TITLE_SS");
     private final JMTable table;
     private final FormView form;
     private final FormMain parent;
     
-    private JMPCInputStringTFWeblaf fInt;
-    private JMPCInputStringTFWeblaf fString;
-    private JMPCInputStringTFWeblaf fText;
-    private JMPCInputStringTFWeblaf fDouble;
-    private JMPCInputStringTFWeblaf fBool;
-    private JMPCInputStringTFWeblaf fDate;
-    private JMPCInputStringTFWeblaf fDateTime;
+    private JMPCInputStringTFWeblaf fIdSS;
+    private JMPCInputStringTFWeblaf fSS;
     private JMRow row;
     private final JMPCDBButtonGroup btnGroup;
     private boolean editMode=false;
     private boolean formClosing=false;
     
-    public static InputTes create(JMTable table,FormMain parent,boolean editing,boolean adding){
-        return new InputTes(table,parent,editing,adding);
+    public static InputSS create(JMTable table,FormMain parent,boolean editing,boolean adding){
+        return new InputSS(table,parent,editing,adding);
     }
     
-    public InputTes(JMTable table,FormMain parent,boolean editing,boolean adding){
+    public InputSS(JMTable table,FormMain parent,boolean editing,boolean adding){
         
         this.parent=parent;
         this.form=new FormView(this.parent,true);
@@ -67,34 +64,19 @@ public class InputTes implements JMFormInterface {
     public void view(boolean editing,boolean adding){
         int width=400;
         boolean horizontal=true;
-        this.fInt=JMPCInputStringTFWeblaf.create(R.label("INT"),"Input integer", 6, width, horizontal).setEditable(false);
-        this.fString=JMPCInputStringTFWeblaf.create(R.label("STRING"),"Input string", 20, width, horizontal).setEditable(true);
-        this.fText=JMPCInputStringTFWeblaf.create(R.label("TEXT"),"Input text", 20, width, horizontal).setEditable(true);
-        this.fDouble=JMPCInputStringTFWeblaf.create(R.label("DOUBLE"),"Input double", 10, width, horizontal).setEditable(true);
-        this.fBool=JMPCInputStringTFWeblaf.create(R.label("BOOL"),"Input boolean", 6, width, horizontal).setEditable(true);
-        this.fDate=JMPCInputStringTFWeblaf.create(R.label("DATE"),"Input date", 15, width, horizontal).setEditable(true);
-        this.fDateTime=JMPCInputStringTFWeblaf.create(R.label("DATETIME"),"Input date time", 20, width, horizontal).setEditable(true);
+        this.fIdSS=JMPCInputStringTFWeblaf.create(R.label("ID_SS"),R.label("PROMPT_ID_SS"), 6, width, horizontal).setEditable(false);
+        this.fSS=JMPCInputStringTFWeblaf.create(R.label("SS"),R.label("PROMPT_SS"), 20, width, horizontal).setEditable(true);
         
         
-        this.table.setFormInterface(this.fInt, 0,true);
-        this.table.setFormInterface(this.fString, 1,true);
-        this.table.setFormInterface(this.fText, 2,true);
-        this.table.setFormInterface(this.fDouble, 3,true);
-        this.table.setFormInterface(this.fBool, 4,true);
-        this.table.setFormInterface(this.fDate, 5,true);
-        this.table.setFormInterface(this.fDateTime, 6,true);
+        this.table.setFormInterface(this.fIdSS, 0,true);
+        this.table.setFormInterface(this.fSS, 1,true);
         
         this.row.displayInterface(true);
         //this.fInt.setVisible(true);
         
         Box box=Box.createVerticalBox();
-        box.add(this.fInt);
-        box.add(this.fString);
-        box.add(this.fText);
-        box.add(this.fDouble);
-        box.add(this.fBool);
-        box.add(this.fDate);
-        box.add(this.fDateTime);
+        box.add(this.fIdSS);
+        box.add(this.fSS);
         
         
         form.getInputPanel().setLayout(new FlowLayout());
@@ -111,13 +93,8 @@ public class InputTes implements JMFormInterface {
     
     private void setEditMode(boolean editMode){
         this.editMode=editMode;
-        this.fInt.setEditMode(editMode,this.row,0);
-        this.fString.setEditMode(editMode,this.row,1);
-        this.fText.setEditMode(editMode,this.row,2);
-        this.fDouble.setEditMode(editMode,this.row,3);
-        this.fBool.setEditMode(editMode,this.row,4);
-        this.fDate.setEditMode(editMode,this.row,5);
-        this.fDateTime.setEditMode(editMode,this.row,6);
+        this.fIdSS.setEditMode(editMode,this.row,0);
+        this.fSS.setEditMode(editMode,this.row,1);
     }
     
     
@@ -132,11 +109,11 @@ public class InputTes implements JMFormInterface {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                if(InputTes.this.editMode){
-                    InputTes.this.formClosing=true;
-                    InputTes.this.btnGroup.btnCancelClick();
+                if(InputSS.this.editMode){
+                    InputSS.this.formClosing=true;
+                    InputSS.this.btnGroup.btnCancelClick();
                 }else{
-                    InputTes.this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                    InputSS.this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 }
             }
 
@@ -257,7 +234,7 @@ public class InputTes implements JMFormInterface {
             if(canceled){
                 this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             }else{
-                InputTes.this.form.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                InputSS.this.form.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             }
         }else{
             this.setEditMode(!canceled);
@@ -267,12 +244,12 @@ public class InputTes implements JMFormInterface {
 
     @Override
     public void actionBeforeRefresh(JMRow rowRefreshed) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
     public void actionAfterFiltered(String filter) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.parent.setSearch(filter);
     }
 
     @Override
