@@ -15,6 +15,7 @@ import com.thowo.jmjavaframework.db.JMResultSet;
 import com.thowo.jmjavaframework.db.JMResultSetStyle;
 import com.thowo.jmjavaframework.table.JMRow;
 import com.thowo.jmjavaframework.table.JMTable;
+import com.thowo.jmpcframework.JMPCFunctions;
 import com.thowo.jmpcframework.component.JMPCTable;
 import com.thowo.jmpcframework.component.form.JMPCDBButtonGroup;
 import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblaf;
@@ -30,7 +31,7 @@ import javax.swing.JScrollPane;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class TableUser implements JMFormInterface{
     private final String title=R.label("TITLE_USER");
@@ -48,8 +49,8 @@ public class TableUser implements JMFormInterface{
     public TableUser(String query,FormMain parent){
         this.parent=parent;
         this.queryView=query;
-        Object[] editorImg={JMFunctions.getResourcePath("img/inbox.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/outbox.png", this.getClass()).getPath()};
-        Object[] adminImg={JMFunctions.getResourcePath("img/inbox.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/outbox.png", this.getClass()).getPath()};
+        Object[] editorImg={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
+        Object[] adminImg={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
         
         this.dbObject=JMTable.create(this.queryView,JMTable.DBTYPE_MYSQL);
         
@@ -94,6 +95,7 @@ public class TableUser implements JMFormInterface{
             this.btnGroup.stateInit();
         }
         
+        this.btnGroup.getBtnPrint().setVisible(false);
         
     }
     
@@ -212,7 +214,7 @@ public class TableUser implements JMFormInterface{
 
     @Override
     public void actionAfterEdited(JMRow rowEdited) {
-        
+        //rowEdited.setValueFromString(1, JMPCFunctions.encrypt("kalawat"));
     }
 
     @Override

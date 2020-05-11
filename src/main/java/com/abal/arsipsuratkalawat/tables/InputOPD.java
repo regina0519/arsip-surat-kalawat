@@ -14,6 +14,7 @@ import com.thowo.jmjavaframework.table.JMRow;
 import com.thowo.jmjavaframework.table.JMTable;
 import com.thowo.jmpcframework.component.form.JMPCDBButtonGroup;
 import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblaf;
+import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblafAC;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.WindowEvent;
@@ -24,7 +25,7 @@ import javax.swing.WindowConstants;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class InputOPD implements JMFormInterface {
     private final String title=R.label("TITLE_OPD");
@@ -86,6 +87,10 @@ public class InputOPD implements JMFormInterface {
         
         this.setEditMode(editing);
         //this.table.getCurrentRow().displayInterface(false);
+        
+        this.btnGroup.getBtnPrint().setVisible(false);
+        this.btnGroup.getBtnView().setVisible(false);
+        
         
         form.setVisible(true);
     }

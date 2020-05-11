@@ -9,7 +9,7 @@ import com.thowo.jmpcframework.JMPCFunctions;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class MainMenuForm extends javax.swing.JFrame {
 

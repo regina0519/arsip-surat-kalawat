@@ -9,6 +9,7 @@ import com.abal.arsipsuratkalawat.gina.FormMenu;
 import com.thowo.jmjavaframework.JMDataContainer;
 import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
+import com.thowo.jmjavaframework.db.JMResultSet;
 import com.thowo.jmjavaframework.report.JMWord;
 import com.thowo.jmjavaframework.report.JMWordMM;
 import com.thowo.jmjavaframework.table.JMTable;
@@ -22,7 +23,7 @@ import javax.swing.JComponent;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class LoginForm extends JMPCForm {
 
@@ -39,6 +40,20 @@ public class LoginForm extends JMPCForm {
         JMTable tbl=new JMTable(JMFunctions.getCurrentConnection().queryMySQL("select * from user", true));
         new JMWordMM(tbl,"/home/jimi/Desktop/tespoi/wordtest1.docx","/home/jimi/Desktop/tespoi/res.docx");
         JMFunctions.traceAndShow("MAIL MERGE DONE");
+    }
+    
+    private boolean login(){
+        String pass=new String(this.jPasswordField1.getPassword());
+        String ql="select * from user where id_user='"+this.jTextField1.getText()+"' and password='"+JMPCFunctions.encrypt(pass)+"'";
+        JMFunctions.trace(ql);
+        JMResultSet l=JMFunctions.getCurrentConnection().queryMySQL(ql, true);
+        boolean ret=l.first();
+        if(ret){
+            Global.setUser(l.getString(0));
+            Global.setEditor(l.getBool(3));
+            Global.setAdmin(l.getBool(4));
+        }
+        return ret;
     }
 
     /**
@@ -57,9 +72,9 @@ public class LoginForm extends JMPCForm {
         jPasswordField1 = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
 
         jLabel2.setText("Nama user:");
 
@@ -89,6 +104,13 @@ public class LoginForm extends JMPCForm {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
+        jButton2.setText("Keluar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
         jPanelMainLayout.setHorizontalGroup(
@@ -108,6 +130,8 @@ public class LoginForm extends JMPCForm {
                                 .addGap(0, 154, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButton1))
                             .addComponent(jPasswordField1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -125,7 +149,9 @@ public class LoginForm extends JMPCForm {
                 .addGap(12, 12, 12)
                 .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap())
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -147,24 +173,37 @@ public class LoginForm extends JMPCForm {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
-        //new FormMain().setVisible(true);
-        new FormTes3().setVisible(true);
-        /*new Thread(new Runnable(){
-            @Override
-            public void run() {
-                //JMFunctions.trace(JMFunctions.getCurrentConnection().queryMySQL("select * from user", true).getString(0));
-                //JMWord.test(new File(JMPCFunctions.getResourcePath("raw/wordtest.docx").getPath()));
-                //JMFunctions.trace(String.valueOf(true));
-                //LoginForm.this.tesMM();
-                new FormTes().setVisible(true);
-            }
-        }).start();*/
+        boolean valid=this.login();
+        valid=true;//SEMENTARA
+        if(valid){
+            this.setVisible(false);
+            new FormMain().setVisible(true);
+            //new FormTes3().setVisible(true);
+
+
+            /*new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    //JMFunctions.trace(JMFunctions.getCurrentConnection().queryMySQL("select * from user", true).getString(0));
+                    //JMWord.test(new File(JMPCFunctions.getResourcePath("raw/wordtest.docx").getPath()));
+                    //JMFunctions.trace(String.valueOf(true));
+                    //LoginForm.this.tesMM();
+                    new FormTes().setVisible(true);
+                }
+            }).start();*/
+        }else{
+            JMFunctions.errorMessage("Login gagal. Periksa kembali ID dan Password");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordField1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -203,6 +242,7 @@ public class LoginForm extends JMPCForm {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;

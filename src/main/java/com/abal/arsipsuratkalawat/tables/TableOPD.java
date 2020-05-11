@@ -28,7 +28,7 @@ import javax.swing.JScrollPane;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class TableOPD implements JMFormInterface{
     private final String title=R.label("TITLE_OPD");
@@ -86,6 +86,9 @@ public class TableOPD implements JMFormInterface{
             this.btnGroup.stateInit();
         }
         
+        
+        
+        this.btnGroup.getBtnPrint().setVisible(false);
         
     }
     

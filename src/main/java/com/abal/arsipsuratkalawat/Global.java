@@ -7,10 +7,12 @@ package com.abal.arsipsuratkalawat;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class Global {
     private static String user;
+    private static boolean editor=true;//SEMENTARA
+    private static boolean admin=true;//SEMENTARA
     
     public static String getUser(){
         return user;
@@ -18,5 +20,16 @@ public class Global {
     public static void setUser(String userId){
         user=userId;
     }
-    
+    public static boolean getAdmin(){
+        return admin;
+    }
+    public static void setAdmin(boolean isAdmin){
+        admin=isAdmin;
+    }
+    public static boolean getEditor(){
+        return editor;
+    }
+    public static void setEditor(boolean isEditor){
+        editor=isEditor;
+    }
 }

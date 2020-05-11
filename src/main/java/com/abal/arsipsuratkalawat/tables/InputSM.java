@@ -17,12 +17,16 @@ import com.thowo.jmjavaframework.table.JMTable;
 import com.thowo.jmpcframework.component.form.JMPCDBButtonGroup;
 import com.thowo.jmpcframework.component.form.JMPCImagesViewerDB;
 import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblaf;
+import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblafAC;
+import com.thowo.jmpcframework.component.form.JMPCSwitchWeblaf;
 import com.thowo.jmpcframework.others.JMImageFilter;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.Box;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -30,7 +34,7 @@ import javax.swing.WindowConstants;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class InputSM implements JMFormInterface {
     private final String title=R.label("TITLE_SM");
@@ -50,7 +54,7 @@ public class InputSM implements JMFormInterface {
     private JMPCInputStringTFWeblaf fTglTerimaSM;
     private JMPCInputStringTFWeblaf fIdUserSM;
     private JMPCInputStringTFWeblaf fNamaUserSM;
-    private JMPCInputStringTFWeblaf fTembusanSM;
+    private JMPCSwitchWeblaf fTembusanSM;
     private JMPCInputStringTFWeblaf fTujuanSM;
     private JMPCInputStringTFWeblaf fKetSM;
     private JMPCImagesViewerDB fIdImgSM;
@@ -94,7 +98,7 @@ public class InputSM implements JMFormInterface {
         this.fTglTerimaSM=JMPCInputStringTFWeblaf.create(R.label("TGL_TERIMA_SM"),R.label("PROMPT_TGL_TERIMA_SM"), 20, width, horizontal).setEditable(true);
         this.fIdUserSM=JMPCInputStringTFWeblaf.create(R.label("ID_USER_SM"),R.label("PROMPT_ID_USER_SM"), 20, width, horizontal).setEditable(false);
         this.fNamaUserSM=JMPCInputStringTFWeblaf.create(R.label("NAMA_USER_SM"),R.label("PROMPT_NAMA_USER_SM"), 20, width, horizontal).setEditable(false);
-        this.fTembusanSM=JMPCInputStringTFWeblaf.create(R.label("TEMBUSAN_SM"),R.label("PROMPT_TEMBUSAN_SM"), 20, width, horizontal).setEditable(true);
+        this.fTembusanSM=JMPCSwitchWeblaf.create(R.label("TEMBUSAN_TRUE"),R.label("TEMBUSAN_FALSE"), 20, width, horizontal).setEditable(true);
         this.fTujuanSM=JMPCInputStringTFWeblaf.create(R.label("TUJUAN_SM"),R.label("PROMPT_TUJUAN_SM"), 20, width, horizontal).setEditable(true);
         this.fKetSM=JMPCInputStringTFWeblaf.create(R.label("KET_SM"),R.label("PROMPT_KET_SM"), 20, width, horizontal).setEditable(true);
         this.fIdImgSM=JMPCImagesViewerDB.create(250,250).setEditable(true);
@@ -149,6 +153,11 @@ public class InputSM implements JMFormInterface {
         //this.table.getCurrentRow().displayInterface(false);
         this.table.viewRow();
         this.init=false;
+        
+        
+        
+        this.btnGroup.getBtnView().setVisible(false);
+        
         form.setVisible(true);
     }
     
@@ -237,7 +246,30 @@ public class InputSM implements JMFormInterface {
     }
     
     
-    
+    private void refreshAutocomplete(){
+        List<String> kOpd=new ArrayList();
+        JMResultSet rOpd=JMFunctions.getCurrentConnection().queryMySQL("select * from opd", false);
+        if(rOpd.first()){
+            do{
+                kOpd.add(rOpd.getString(1));
+            }while(rOpd.next());
+        }
+        if(!kOpd.isEmpty()){
+            //this.fAsalSM.setKeyword(kOpd);
+        }
+        
+        List<String> kSS=new ArrayList();
+        JMResultSet rSS=JMFunctions.getCurrentConnection().queryMySQL("select * from sifat_surat", false);
+        if(rSS.first()){
+            do{
+                JMFunctions.trace(rSS.getString(1));
+                kSS.add(rSS.getString(1));
+            }while(rSS.next());
+        }
+        if(!kSS.isEmpty()){
+            //this.fSifatSM.setKeyword(kSS);
+        }
+    } 
     private void refreshImages(){
         if(!this.form.isVisible() && !this.init)return;
         this.fIdImgSM.clearPaths();
@@ -254,7 +286,7 @@ public class InputSM implements JMFormInterface {
         }
     } 
     private void setTembusan(){
-        if(this.editMode){
+        /*if(this.editMode){
             if(this.fTembusanSM.getValueString().equals("true")){
                 this.fTujuanSM.unlock();
                 this.fTujuanSM.setText("");
@@ -265,7 +297,7 @@ public class InputSM implements JMFormInterface {
         }else{
             this.fTujuanSM.lock();
             this.fTujuanSM.setText(this.fTujuanSM.getValueString());
-        }
+        }*/
         
     }
     private void deleteImageTmps(){
@@ -315,6 +347,7 @@ public class InputSM implements JMFormInterface {
         this.row=rowAdded;
         this.setEditMode(true);
         this.refreshImages();
+        //this.refreshAutocomplete();
         this.setTembusan();
     }
 
@@ -323,6 +356,7 @@ public class InputSM implements JMFormInterface {
         this.setEditMode(false);
         this.row=this.table.getCurrentRow();
         this.refreshImages();
+        //this.refreshAutocomplete();
         this.setTembusan();
     }
 
@@ -331,6 +365,7 @@ public class InputSM implements JMFormInterface {
         this.setEditMode(!saved);
         this.btnGroup.stateNav();
         this.refreshImages();
+        //this.refreshAutocomplete();
         this.setTembusan();
     }
 
@@ -339,6 +374,7 @@ public class InputSM implements JMFormInterface {
         this.row=rowEdited;
         this.setEditMode(true);
         this.refreshImages();
+        this.refreshAutocomplete();
         this.setTembusan();
     }
 
@@ -347,6 +383,7 @@ public class InputSM implements JMFormInterface {
         this.row=rowPrinted;
         this.setEditMode(false);
         this.refreshImages();
+        //this.refreshAutocomplete();
         this.setTembusan();
     }
 
@@ -355,6 +392,7 @@ public class InputSM implements JMFormInterface {
         this.row=rowRefreshed;
         this.setEditMode(false);
         this.refreshImages();
+        //this.refreshAutocomplete();
         this.setTembusan();
     }
 
@@ -363,6 +401,7 @@ public class InputSM implements JMFormInterface {
         this.row=rowViewed;
         this.setEditMode(false);
         this.refreshImages();
+        this.refreshAutocomplete();
         this.setTembusan();
     }
 
@@ -371,6 +410,7 @@ public class InputSM implements JMFormInterface {
         this.row=nextRow;
         //this.setEditMode(false);
         this.refreshImages();
+        //this.refreshAutocomplete();
         this.setTembusan();
     }
 
@@ -379,6 +419,7 @@ public class InputSM implements JMFormInterface {
         this.row=prevRow;
         //this.setEditMode(false);
         this.refreshImages();
+        //this.refreshAutocomplete();
         this.setTembusan();
     }
 
@@ -387,6 +428,7 @@ public class InputSM implements JMFormInterface {
         this.row=firstRow;
         //this.setEditMode(false);
         this.refreshImages();
+        //this.refreshAutocomplete();
         this.setTembusan();
     }
 
@@ -395,6 +437,7 @@ public class InputSM implements JMFormInterface {
         this.row=lastRow;
         //this.setEditMode(false);
         this.refreshImages();
+        //this.refreshAutocomplete();
         this.setTembusan();
     }
 
@@ -403,6 +446,7 @@ public class InputSM implements JMFormInterface {
         this.row=currentRow;
         //this.setEditMode(false);
         this.refreshImages();
+        //this.refreshAutocomplete();
         this.setTembusan();
     }
 
@@ -419,12 +463,14 @@ public class InputSM implements JMFormInterface {
             if(canceled)this.row=rowCanceled;
         }
         this.refreshImages();
+        //this.refreshAutocomplete();
         this.setTembusan();
     }
 
     @Override
     public void actionBeforeRefresh(JMRow rowRefreshed) {
         this.refreshImages();
+        //this.refreshAutocomplete();
         this.setTembusan();
     }
 

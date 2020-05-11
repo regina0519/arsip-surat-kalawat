@@ -13,19 +13,27 @@ import com.thowo.jmjavaframework.JMFormInterface;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.table.JMRow;
 import com.thowo.jmjavaframework.table.JMTable;
+import com.thowo.jmpcframework.JMPCFunctions;
 import com.thowo.jmpcframework.component.form.JMPCDBButtonGroup;
 import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblaf;
+import com.thowo.jmpcframework.component.form.JMPCSwitchWeblaf;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import javax.swing.Action;
 import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class InputUser implements JMFormInterface {
     private final String title=R.label("TITLE_USER");
@@ -36,12 +44,14 @@ public class InputUser implements JMFormInterface {
     private JMPCInputStringTFWeblaf fId;
     private JMPCInputStringTFWeblaf fPass;
     private JMPCInputStringTFWeblaf fNama;
-    private JMPCInputStringTFWeblaf fEditor;
-    private JMPCInputStringTFWeblaf fAdmin;
+    private JMPCSwitchWeblaf fEditor;
+    private JMPCSwitchWeblaf fAdmin;
+    private JButton reset;
     private JMRow row;
     private final JMPCDBButtonGroup btnGroup;
     private boolean editMode=false;
     private boolean formClosing=false;
+    private boolean resetClicked=false;
     
     public static InputUser create(JMTable table,FormMain parent,boolean editing,boolean adding){
         return new InputUser(table,parent,editing,adding);
@@ -68,10 +78,10 @@ public class InputUser implements JMFormInterface {
         int width=400;
         boolean horizontal=true;
         this.fId=JMPCInputStringTFWeblaf.create(R.label("ID_USER"),R.label("PROMPT_ID_USER"), 6, width, horizontal).setEditable(true);
-        this.fPass=JMPCInputStringTFWeblaf.create(R.label("PASS_USER"),R.label("PROMPT_PASS_USER"), 20, width, horizontal).setEditable(true);
+        this.fPass=JMPCInputStringTFWeblaf.create(R.label("PASS_USER"),R.label("PROMPT_PASS_USER"), 20, width, horizontal).setEditable(false);
         this.fNama=JMPCInputStringTFWeblaf.create(R.label("NAMA_USER"),R.label("PROMPT_NAMA_USER"), 20, width, horizontal).setEditable(true);
-        this.fEditor=JMPCInputStringTFWeblaf.create(R.label("EDITOR_USER"),R.label("PROMPT_EDITOR_USER"), 10, width, horizontal).setEditable(true);
-        this.fAdmin=JMPCInputStringTFWeblaf.create(R.label("ADMIN_USER"),R.label("PROMPT_ADMIN_USER"), 6, width, horizontal).setEditable(true);
+        this.fEditor=JMPCSwitchWeblaf.create("Editor","Non-editor", 10, width, horizontal).setEditable(true);
+        this.fAdmin=JMPCSwitchWeblaf.create("Admin","Non-admin", 6, width, horizontal).setEditable(true);
         
         
         this.table.setFormInterface(this.fId, 0,true);
@@ -89,6 +99,8 @@ public class InputUser implements JMFormInterface {
         box.add(this.fNama);
         box.add(this.fEditor);
         box.add(this.fAdmin);
+        this.reset=new JButton("Reset Password");
+        box.add(this.reset);
         
         
         form.getInputPanel().setLayout(new FlowLayout());
@@ -100,6 +112,10 @@ public class InputUser implements JMFormInterface {
         this.setEditMode(editing);
         //this.table.getCurrentRow().displayInterface(false);
         
+        
+        this.btnGroup.getBtnPrint().setVisible(false);
+        this.btnGroup.getBtnView().setVisible(false);
+        
         form.setVisible(true);
     }
     
@@ -110,12 +126,21 @@ public class InputUser implements JMFormInterface {
         this.fNama.setEditMode(editMode,this.row,2);
         this.fEditor.setEditMode(editMode,this.row,3);
         this.fAdmin.setEditMode(editMode,this.row,4);
+        this.reset.setEnabled(editMode);
+        
     }
     
     
     
     
     private void addListener(){
+        this.reset.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //InputUser.this.fPass.setText(JMPCFunctions.encrypt("kalawat"));
+                InputUser.this.table.getCurrentRow().setValueFromString(1, JMPCFunctions.encrypt("kalawat"));
+            }
+        });
         this.form.addWindowListener(new WindowListener(){
             @Override
             public void windowOpened(WindowEvent e) {
@@ -191,6 +216,7 @@ public class InputUser implements JMFormInterface {
 
     @Override
     public void actionAfterEdited(JMRow rowEdited) {
+        
         this.row=rowEdited;
         this.setEditMode(true);
     }

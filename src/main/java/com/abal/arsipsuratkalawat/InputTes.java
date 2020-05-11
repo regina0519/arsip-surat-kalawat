@@ -11,6 +11,7 @@ import com.thowo.jmjavaframework.table.JMRow;
 import com.thowo.jmjavaframework.table.JMTable;
 import com.thowo.jmpcframework.component.form.JMPCDBButtonGroup;
 import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblaf;
+import com.thowo.jmpcframework.component.form.JMPCSwitchWeblaf;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.MouseEvent;
@@ -23,7 +24,7 @@ import javax.swing.WindowConstants;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class InputTes implements JMFormInterface {
     private final String title=R.label("TITLE_TES");
@@ -35,7 +36,7 @@ public class InputTes implements JMFormInterface {
     private JMPCInputStringTFWeblaf fString;
     private JMPCInputStringTFWeblaf fText;
     private JMPCInputStringTFWeblaf fDouble;
-    private JMPCInputStringTFWeblaf fBool;
+    private JMPCSwitchWeblaf fBool;
     private JMPCInputStringTFWeblaf fDate;
     private JMPCInputStringTFWeblaf fDateTime;
     private JMRow row;
@@ -71,7 +72,7 @@ public class InputTes implements JMFormInterface {
         this.fString=JMPCInputStringTFWeblaf.create(R.label("STRING"),"Input string", 20, width, horizontal).setEditable(true);
         this.fText=JMPCInputStringTFWeblaf.create(R.label("TEXT"),"Input text", 20, width, horizontal).setEditable(true);
         this.fDouble=JMPCInputStringTFWeblaf.create(R.label("DOUBLE"),"Input double", 10, width, horizontal).setEditable(true);
-        this.fBool=JMPCInputStringTFWeblaf.create(R.label("BOOL"),"Input boolean", 6, width, horizontal).setEditable(true);
+        this.fBool=JMPCSwitchWeblaf.create("Ya","Tidak", 6, width, horizontal).setEditable(true);
         this.fDate=JMPCInputStringTFWeblaf.create(R.label("DATE"),"Input date", 15, width, horizontal).setEditable(true);
         this.fDateTime=JMPCInputStringTFWeblaf.create(R.label("DATETIME"),"Input date time", 20, width, horizontal).setEditable(true);
         

@@ -36,7 +36,7 @@ import javax.swing.plaf.synth.SynthLookAndFeel;
 import javax.swing.table.DefaultTableModel;
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class FormTes extends JMPCForm{
     private JMPCInputStringTFWeblaf tesInput;

@@ -16,7 +16,7 @@ import javax.swing.plaf.synth.SynthLookAndFeel;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class FormTes2 extends javax.swing.JFrame {
 

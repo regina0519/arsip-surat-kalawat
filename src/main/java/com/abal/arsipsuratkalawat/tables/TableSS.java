@@ -30,7 +30,7 @@ import javax.swing.JScrollPane;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class TableSS implements JMFormInterface{
     private final String title=R.label("TITLE_SS");
@@ -89,6 +89,7 @@ public class TableSS implements JMFormInterface{
         }
         
         
+        this.btnGroup.getBtnPrint().setVisible(false);
     }
     
     private void openForm(boolean editing, boolean adding){

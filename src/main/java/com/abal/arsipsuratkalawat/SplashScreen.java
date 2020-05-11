@@ -21,7 +21,7 @@ import javax.swing.SwingUtilities;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class SplashScreen extends javax.swing.JFrame {
 

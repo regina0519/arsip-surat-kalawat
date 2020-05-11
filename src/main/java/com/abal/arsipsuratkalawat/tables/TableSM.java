@@ -29,7 +29,7 @@ import javax.swing.JScrollPane;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class TableSM implements JMFormInterface{
     private final String title=R.label("TITLE_SM");
@@ -50,7 +50,7 @@ public class TableSM implements JMFormInterface{
         this.parent=parent;
         this.queryView=query;
         this.activeYear=this.parent.getYear();
-        Object[] tembusanImg={JMFunctions.getResourcePath("img/inbox.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/outbox.png", this.getClass()).getPath()};
+        Object[] tembusanImg={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
         
         this.dbObject=JMTable.create(this.queryView,JMTable.DBTYPE_MYSQL);
         

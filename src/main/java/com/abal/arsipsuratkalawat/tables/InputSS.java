@@ -25,7 +25,7 @@ import javax.swing.WindowConstants;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class InputSS implements JMFormInterface {
     private final String title=R.label("TITLE_SS");
@@ -87,6 +87,10 @@ public class InputSS implements JMFormInterface {
         
         this.setEditMode(editing);
         //this.table.getCurrentRow().displayInterface(false);
+        
+        
+        this.btnGroup.getBtnPrint().setVisible(false);
+        this.btnGroup.getBtnView().setVisible(false);
         
         form.setVisible(true);
     }

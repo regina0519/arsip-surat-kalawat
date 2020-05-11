@@ -27,13 +27,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class FormMain extends JMPCForm {
+    public static final int MENU_SM=0;
+    public static final int MENU_SK=1;
+    public static final int MENU_OPD=2;
+    public static final int MENU_SS=3;
+    public static final int MENU_USER=4;
+    
+    
     private JMPCInputStringTFWeblaf search;
+    private int currentMenu=MENU_SM;
     
 
     /**h
@@ -52,7 +62,92 @@ public class FormMain extends JMPCForm {
         this.jSpinner1.setValue(Integer.valueOf(now.getYearFull()));
         
         //super.toggleFullscreen(true);
+        this.initAccess();
+        this.gotoMenu(this.currentMenu);
+        this.addListener();
+    }
+    
+    private void addListener(){
+        this.jSpinner1.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                if(FormMain.this.currentMenu==FormMain.MENU_SM)FormMain.this.gotoMenu(MENU_SM);
+                else if(FormMain.this.currentMenu==FormMain.MENU_SK)FormMain.this.gotoMenu(MENU_SK);
+            }
+        });
+    }
+    
+    public void gotoMenu(int menu){
+        if(menu==FormMain.MENU_SM){
+            this.gotoSM();
+            this.currentMenu=FormMain.MENU_SM;
+        }else if(menu==FormMain.MENU_SK){
+            this.gotoSK();
+            this.currentMenu=FormMain.MENU_SK;
+        }else if(menu==FormMain.MENU_OPD){
+            this.gotoOPD();
+            this.currentMenu=FormMain.MENU_OPD;
+        }else if(menu==FormMain.MENU_SS){
+            this.gotoSS();
+            this.currentMenu=FormMain.MENU_SS;
+        }else if(menu==FormMain.MENU_USER){
+            this.gotoUSER();
+            this.currentMenu=FormMain.MENU_USER;
+        }
+    }
+    
+    private void gotoSM(){
+        String q="SELECT \n" +
+            "surat_masuk.id_sm AS id_sm,\n" +
+            "surat_masuk.no_agenda AS no_agenda,\n" +
+            "surat_masuk.no_sm AS no_sm,\n" +
+            "surat_masuk.tgl_sm AS tgl,\n" +
+            "surat_masuk.asal_sm AS asal_sm,\n" +
+            "surat_masuk.perihal_sm AS perihal_sm,\n" +
+            "surat_masuk.sifat_sm AS sifat_sm,\n" +
+            "surat_masuk.lampiran_sm AS lampiran_sm,\n" +
+            "surat_masuk.tgl_terima AS tgl_terima,\n" +
+            "surat_masuk.id_user AS id_user,\n" +
+            "user.nama_user AS nama_user,\n" +
+            "surat_masuk.tembusan_sm AS tembusan_sm,\n" +
+            "surat_masuk.tujuan_sm AS tujuan_sm,\n" +
+            "surat_masuk.ket_sm AS ket_sm,\n" +
+            "surat_masuk.id_sm AS id_img\n" +
+            "FROM surat_masuk,user\n" +
+            "WHERE surat_masuk.id_user=user.id_user\n" +
+            " and YEAR(surat_masuk.tgl_terima)='"+this.jSpinner1.getValue()+"'\n" +
+            "ORDER BY tgl_terima desc";
+        TableSM smTbl=TableSM.create(q, FormMain.this);
+        this.search.setAction(smTbl.filter(this.search));
+        this.jLabel1.setText("Agenda Surat Masuk");
+    }
+    private void gotoSK(){
+        this.jLabel1.setText("Agenda Surat Keluar");
+    }
+    private void gotoOPD(){
+        if(!Global.getAdmin())return;
+        TableOPD opdTbl=TableOPD.create("select * from opd", FormMain.this);
+        this.search.setAction(opdTbl.filter(this.search));
+        this.jLabel1.setText("Pengaturan OPD");
+    }
+    private void gotoSS(){
+        if(!Global.getAdmin())return;
+        TableSS ssTbl=TableSS.create("select * from sifat_surat", FormMain.this);
+        this.search.setAction(ssTbl.filter(this.search));
+        this.jLabel1.setText("Pengaturan Sifat Surat");
+    }
+    private void gotoUSER(){
+        if(!Global.getAdmin())return;
+        TableUser userTbl=TableUser.create("select * from user", FormMain.this);
+        this.search.setAction(userTbl.filter(this.search));
         
+        this.jLabel1.setText("Pengaturan Pengguna");
+    }
+    
+    private void initAccess(){
+        this.jButton3.setEnabled(Global.getAdmin());
+        this.jButton4.setEnabled(Global.getAdmin());        
+        this.jButton5.setEnabled(Global.getAdmin());        
     }
     
     public int getYear(){
@@ -117,7 +212,6 @@ public class FormMain extends JMPCForm {
         jFilterMsg = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
 
         jPanelMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 204, 0)));
 
@@ -146,6 +240,11 @@ public class FormMain extends JMPCForm {
         });
 
         jButton2.setText("SK");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("OPD");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -173,14 +272,14 @@ public class FormMain extends JMPCForm {
         jPanel13Layout.setHorizontalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel13Layout.createSequentialGroup()
-                .addGap(76, 76, 76)
+                .addContainerGap()
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
-                .addContainerGap(88, Short.MAX_VALUE))
+                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,6 +345,11 @@ public class FormMain extends JMPCForm {
         jLabel2.setText("Tahun");
 
         jSpinner1.setModel(new javax.swing.SpinnerNumberModel(2020, 2020, 9999, 1));
+        jSpinner1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jSpinner1MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -480,46 +584,35 @@ public class FormMain extends JMPCForm {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        TableOPD opdTbl=TableOPD.create("select * from opd", FormMain.this);
-        this.search.setAction(opdTbl.filter(this.search));
+        this.gotoMenu(FormMain.MENU_OPD);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        TableSS ssTbl=TableSS.create("select * from sifat_surat", FormMain.this);
-        this.search.setAction(ssTbl.filter(this.search));
+        this.gotoMenu(FormMain.MENU_SS);
+        
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        TableUser userTbl=TableUser.create("select * from user", FormMain.this);
-        this.search.setAction(userTbl.filter(this.search));
+        this.gotoMenu(FormMain.MENU_USER);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String q="SELECT \n" +
-            "surat_masuk.id_sm AS id_sm,\n" +
-            "surat_masuk.no_agenda AS no_agenda,\n" +
-            "surat_masuk.no_sm AS no_sm,\n" +
-            "surat_masuk.tgl_sm AS tgl,\n" +
-            "surat_masuk.asal_sm AS asal_sm,\n" +
-            "surat_masuk.perihal_sm AS perihal_sm,\n" +
-            "surat_masuk.sifat_sm AS sifat_sm,\n" +
-            "surat_masuk.lampiran_sm AS lampiran_sm,\n" +
-            "surat_masuk.tgl_terima AS tgl_terima,\n" +
-            "surat_masuk.id_user AS id_user,\n" +
-            "user.nama_user AS nama_user,\n" +
-            "surat_masuk.tembusan_sm AS tembusan_sm,\n" +
-            "surat_masuk.tujuan_sm AS tujuan_sm,\n" +
-            "surat_masuk.ket_sm AS ket_sm,\n" +
-            "surat_masuk.id_sm AS id_img\n" +
-            "FROM surat_masuk,user\n" +
-            "WHERE surat_masuk.id_user=user.id_user\n" +
-            "ORDER BY tgl_terima desc";
-        TableSM smTbl=TableSM.create(q, FormMain.this);
-        this.search.setAction(smTbl.filter(this.search));
+        this.gotoMenu(FormMain.MENU_SM);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        
+        this.gotoMenu(FormMain.MENU_SM);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jSpinner1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSpinner1MouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jSpinner1MouseClicked
 
     /**
      * @param args the command line arguments

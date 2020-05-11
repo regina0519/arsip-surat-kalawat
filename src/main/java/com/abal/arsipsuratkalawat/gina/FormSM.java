@@ -18,7 +18,7 @@ import javax.swing.table.TableRowSorter;
 
 /**
  *
- * @author jimi
+ * @author Regina
  */
 public class FormSM extends javax.swing.JFrame {
     private boolean adding=false;
