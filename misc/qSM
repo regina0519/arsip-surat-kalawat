@@ -1,0 +1,20 @@
+SELECT 
+surat_masuk.id_sm AS id_sm,
+surat_masuk.no_agenda AS no_agenda,
+surat_masuk.no_sm AS no_sm,
+surat_masuk.tgl_sm AS tgl,
+surat_masuk.asal_sm AS asal_sm,
+surat_masuk.perihal_sm AS perihal_sm,
+surat_masuk.sifat_sm AS sifat_sm,
+surat_masuk.lampiran_sm AS lampiran_sm,
+surat_masuk.tgl_terima AS tgl_terima,
+surat_masuk.id_user AS id_user,
+user.nama_user AS nama_user,
+surat_masuk.tembusan_sm AS tembusan_sm,
+surat_masuk.tujuan_sm AS tujuan_sm,
+surat_masuk.ket_sm AS ket_sm,
+surat_masuk.id_sm AS id_img
+FROM surat_masuk,user
+WHERE surat_masuk.id_user=user.id_user
+ORDER BY tgl_terima desc
+

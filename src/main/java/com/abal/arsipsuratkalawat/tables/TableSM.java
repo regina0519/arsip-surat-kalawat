@@ -6,10 +6,9 @@
 package com.abal.arsipsuratkalawat.tables;
 
 import com.abal.arsipsuratkalawat.FormMain;
-import com.abal.arsipsuratkalawat.InputTes;
 import com.abal.arsipsuratkalawat.R;
-import com.abal.arsipsuratkalawat.TableTes;
 import com.thowo.jmjavaframework.JMFormInterface;
+import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.db.JMResultSet;
 import com.thowo.jmjavaframework.db.JMResultSetStyle;
@@ -32,36 +31,54 @@ import javax.swing.JScrollPane;
  *
  * @author jimi
  */
-public class TableSS implements JMFormInterface{
-    private final String title=R.label("TITLE_SS");
+public class TableSM implements JMFormInterface{
+    private final String title=R.label("TITLE_SM");
     private final String queryView;
     private final JMTable dbObject;
     private final JMPCTable table;
     private final JMPCDBButtonGroup btnGroup;
     private final List<Integer> primaryKeys;
     private final FormMain parent;
+    private InputSM inputSM;
+    private int activeYear=2020;//============== 4 DIGIT ONLY
     
-    public static TableSS create(String query,FormMain parent){
-        return new TableSS(query,parent);
+    public static TableSM create(String query,FormMain parent){
+        return new TableSM(query,parent);
     }
     
-    public TableSS(String query,FormMain parent){
+    public TableSM(String query,FormMain parent){
         this.parent=parent;
         this.queryView=query;
-        //Object[] boolImg={JMFunctions.getResourcePath("img/inbox.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/outbox.png", this.getClass()).getPath()};
+        this.activeYear=this.parent.getYear();
+        Object[] tembusanImg={JMFunctions.getResourcePath("img/inbox.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/outbox.png", this.getClass()).getPath()};
         
         this.dbObject=JMTable.create(this.queryView,JMTable.DBTYPE_MYSQL);
         
         this.dbObject.getStyle()
-                .setLabel(0,R.label("ID_SS"))
-                .setLabel(1,R.label("SS"));
+                .setLabel(0,R.label("ID_SM"))
+                .setLabel(1,R.label("NO_AGENDA_SM"))
+                .setLabel(2,R.label("NO_SM"))
+                .setLabel(3,R.label("TGL_SM"))
+                .setLabel(4,R.label("ASAL_SM"))
+                .setLabel(5,R.label("PERIHAL_SM"))
+                .setLabel(6,R.label("SIFAT_SM"))
+                .setLabel(7,R.label("LAMPIRAN_SM"))
+                .setLabel(8,R.label("TGL_TERIMA_SM"))
+                .setLabel(9,R.label("ID_USER_SM"))
+                .setLabel(10,R.label("NAMA_USER_SM"))
+                .setLabel(11,R.label("TEMBUSAN_SM"))
+                .setLabel(12,R.label("TUJUAN_SM"))
+                .setLabel(13,R.label("KET_SM"))
+                .setLabel(14,R.label("ID_SM"))
+                .setColHidden(0).setColHidden(3).setColHidden(6).setColHidden(7).setColHidden(8).setColHidden(9).setColHidden(12).setColHidden(13).setColHidden(14)
+                .addFormat(11, JMResultSetStyle.FORMAT_IMAGE, tembusanImg);
         this.dbObject.refresh();
-        //List<Integer> excluded=new ArrayList();
-        //excluded.add(1);
-        //excluded.add(3);
-        //this.dbObject.excludeColumnsFromUpdate(excluded);
+        List<Integer> excluded=new ArrayList();
+        excluded.add(10);
+        excluded.add(14);
+        this.dbObject.excludeColumnsFromUpdate(excluded);
         this.dbObject.addInterface(this);
-        this.dbObject.setName("sifat_surat");
+        this.dbObject.setName("surat_masuk");
         this.primaryKeys=new ArrayList();
         this.primaryKeys.add(0);
         this.dbObject.setKeyColumns(this.primaryKeys);
@@ -92,7 +109,7 @@ public class TableSS implements JMFormInterface{
     }
     
     private void openForm(boolean editing, boolean adding){
-        InputSS.create(TableSS.this.dbObject,parent,editing,adding);
+        this.inputSM=InputSM.create(TableSM.this.dbObject,parent,editing,adding);
     }
     
     
@@ -111,7 +128,7 @@ public class TableSS implements JMFormInterface{
             @Override
             public void keyReleased(KeyEvent e) {
                 if(e.getKeyCode()==e.VK_ENTER){
-                    TableSS.this.openForm(false,false);
+                    TableSM.this.openForm(false,false);
                 }
             }
         });
@@ -120,7 +137,7 @@ public class TableSS implements JMFormInterface{
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount()==2 && !e.isConsumed()){
-                    TableSS.this.openForm(false,false);
+                    TableSM.this.openForm(false,false);
                 }
             }
 
@@ -148,19 +165,19 @@ public class TableSS implements JMFormInterface{
         this.btnGroup.getBtnAdd().addAction(new Runnable(){
             @Override
             public void run() {
-                TableSS.this.openForm(true,true);
+                TableSM.this.openForm(true,true);
             }
         });
         this.btnGroup.getBtnEdit().addAction(new Runnable(){
             @Override
             public void run() {
-                TableSS.this.openForm(true,false);
+                TableSM.this.openForm(true,false);
             }
         });
         this.btnGroup.getBtnView().addAction(new Runnable(){
             @Override
             public void run() {
-                TableSS.this.openForm(false,false);
+                TableSM.this.openForm(false,false);
             }
         });
         
@@ -176,20 +193,51 @@ public class TableSS implements JMFormInterface{
         return new Runnable(){
             @Override
             public void run() {
-                TableSS.this.dbObject.filter(textField.getText());
+                TableSM.this.dbObject.filter(textField.getText());
             }
         };
     }
 
-    @Override
-    public void actionAfterAdded(JMRow rowAdded) {
-        JMResultSet r=JMFunctions.getCurrentConnection().queryMySQL("select * from sifat_surat order by id_ss desc", false);
+    private String getNewId(){
+        String ret="";
+        int id=1;
+        String q="select id_sm from surat_masuk where id_sm like '%SM"+this.activeYear+"%' order by id_sm desc";
+        JMResultSet r=JMFunctions.getCurrentConnection().queryMySQL(q, true);
         Integer v=1;
         if(r.first()){
-            v=r.getInt(0);
-            v++;
+            String str=r.getString(0);
+            str=str.substring(6);
+            v=Integer.valueOf(str);
         }
-        rowAdded.setValueFromString(0, String.valueOf(v));
+        ret="SM"+this.activeYear+JMFormatCollection.leadingZero(++v, 4);
+        return ret;
+    }
+    private String getNewReg(){
+        String ret="";
+        int id=1;
+        String q="select no_agenda from surat_masuk where id_sm like '%SM"+this.activeYear+"%' order by no_agenda desc";
+        JMResultSet r=JMFunctions.getCurrentConnection().queryMySQL(q, true);
+        Integer v=1;
+        String str="";
+        if(r.first()){
+            str=r.getString(0);
+            try{
+                v=Integer.valueOf(str);
+                str=JMFormatCollection.leadingZero(++v, 3);
+            }catch(NumberFormatException e){
+                
+            }
+        }
+        ret=str;
+        return ret;
+    }
+    
+    
+
+    @Override
+    public void actionAfterAdded(JMRow rowAdded) {
+        rowAdded.setValueFromString(0, this.getNewId());
+        rowAdded.setValueFromString(1, this.getNewReg());
     }
 
     @Override
@@ -257,15 +305,14 @@ public class TableSS implements JMFormInterface{
         
     }
 
+    @Override
+    public void actionAfterFiltered(String filter) {
+        this.parent.setSearch(filter);
+    }
 
     @Override
     public void actionBeforeFilter(String filter) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void actionAfterFiltered(String filter) {
-        this.parent.setSearch(filter);
     }
     
 }

@@ -148,7 +148,8 @@ public class LoginForm extends JMPCForm {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        new FormMain().setVisible(true);
+        //new FormMain().setVisible(true);
+        new FormTes3().setVisible(true);
         /*new Thread(new Runnable(){
             @Override
             public void run() {
