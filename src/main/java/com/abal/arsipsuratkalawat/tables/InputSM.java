@@ -15,12 +15,15 @@ import com.asprise.imaging.core.RequestOutputItem;
 import com.asprise.imaging.core.Result;
 import com.asprise.imaging.core.scan.twain.TwainConstants;
 import com.asprise.imaging.scan.ui.workbench.AspriseScanUI;
+import com.thowo.jmjavaframework.JMAsyncTask;
 import com.thowo.jmjavaframework.JMFormInterface;
 import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
+import com.thowo.jmjavaframework.db.JMConnection;
 import com.thowo.jmjavaframework.db.JMResultSet;
 import com.thowo.jmjavaframework.table.JMRow;
 import com.thowo.jmjavaframework.table.JMTable;
+import com.thowo.jmpcframework.component.JMPCAsyncLoaderPanel;
 import com.thowo.jmpcframework.component.form.JMPCDBButtonGroup;
 import com.thowo.jmpcframework.component.form.JMPCImagesViewerDB;
 import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblaf;
@@ -35,6 +38,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import javax.swing.Box;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -285,17 +289,17 @@ public class InputSM implements JMFormInterface {
         }
     } 
     private void refreshImages(){
-        if(!this.form.isVisible() && !this.init)return;
-        this.fIdImgSM.clearPaths();
-        String key=this.fIdSM.getText();
+        if(!InputSM.this.form.isVisible() && !InputSM.this.init)return;
+        InputSM.this.fIdImgSM.clearPaths();
+        String key=InputSM.this.fIdSM.getText();
         JMFunctions.trace("KEY : "+key);
         String q="select * from gambar_sm where id_sm='"+key+"' order by halaman_sm asc";
         JMResultSet r=JMFunctions.getCurrentConnection().queryMySQL(q, true);
-        this.fIdImgSM.setKeyValue(key);
+        InputSM.this.fIdImgSM.setKeyValue(key);
         if(r.first()){
             do{
                 JMFunctions.trace(r.getString(2));
-                this.fIdImgSM.addImage(r.getString(2));
+                InputSM.this.fIdImgSM.addImage(r.getString(2));
             }while(r.next());
         }
     } 
@@ -407,17 +411,18 @@ public class InputSM implements JMFormInterface {
                 
                 if(!validS.equals(validD)){
                     JMFunctions.trace(validS+"                 KE               "+validD);
-                    //JMFunctions.deleteFile(new File(validD));
+                    JMFunctions.deleteFile(new File(validD));
                     JMFunctions.moveFile(new File(validS), new File(validD));
                 }
                 
                 if(i==0)qU+="'"+idDet+"','"+id+"','"+validD+"','"+(i+1)+"')";
                 else qU+=",('"+idDet+"','"+id+"','"+validD+"','"+(i+1)+"')";
             }
+            JMFunctions.trace(qU);
+            JMFunctions.getCurrentConnection().queryUpdateMySQL(qD, true);
+            JMFunctions.getCurrentConnection().queryUpdateMySQL(qU, true);
         }
         this.deleteImageTmps();
-        JMFunctions.getCurrentConnection().queryUpdateMySQL(qD, true);
-        JMFunctions.getCurrentConnection().queryUpdateMySQL(qU, true);
     }
     
     
@@ -454,8 +459,8 @@ public class InputSM implements JMFormInterface {
     @Override
     public void actionAfterEdited(JMRow rowEdited) {
         this.row=rowEdited;
-        this.setEditMode(true);
         this.refreshImages();
+        this.setEditMode(true);
         this.refreshAutocomplete();
         this.setTembusan();
     }

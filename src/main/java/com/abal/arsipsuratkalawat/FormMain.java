@@ -54,7 +54,7 @@ public class FormMain extends JMPCForm {
         super.setContent(this.jPanelMain, new JMPCLoadingSprite());
         this.initModule();
         this.jPanel10.setLayout(new BorderLayout());
-        this.search=JMPCInputStringTFWeblaf.create("", "tes", 10, 5, true);
+        this.search=JMPCInputStringTFWeblaf.create("", R.label("PROMPT_SEARCH"), 15, 20, true);
         this.jPanel10.add(this.search,BorderLayout.EAST);
         JSpinner.NumberEditor editor = new JSpinner.NumberEditor(this.jSpinner1, "#");
         this.jSpinner1.setEditor(editor);
@@ -63,7 +63,7 @@ public class FormMain extends JMPCForm {
         
         //super.toggleFullscreen(true);
         this.initAccess();
-        this.gotoMenu(this.currentMenu);
+        //this.gotoMenu(this.currentMenu);
         this.addListener();
     }
     
