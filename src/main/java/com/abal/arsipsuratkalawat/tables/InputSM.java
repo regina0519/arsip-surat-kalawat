@@ -9,6 +9,12 @@ import com.abal.arsipsuratkalawat.FormMain;
 import com.abal.arsipsuratkalawat.FormView;
 import com.abal.arsipsuratkalawat.FormViewAgenda;
 import com.abal.arsipsuratkalawat.R;
+import com.asprise.imaging.core.Imaging;
+import com.asprise.imaging.core.Request;
+import com.asprise.imaging.core.RequestOutputItem;
+import com.asprise.imaging.core.Result;
+import com.asprise.imaging.core.scan.twain.TwainConstants;
+import com.asprise.imaging.scan.ui.workbench.AspriseScanUI;
 import com.thowo.jmjavaframework.JMFormInterface;
 import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
@@ -25,6 +31,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -235,7 +242,8 @@ public class InputSM implements JMFormInterface {
         this.fIdImgSM.setAddAction(new Runnable(){
             @Override
             public void run() {
-                InputSM.this.imageFromBrowser();
+                //InputSM.this.imageFromBrowser();
+                InputSM.this.imageFromScanner();
             }
         });
         /*this.btnGroup.getBtnEdit().setAction(new Runnable(){
@@ -343,6 +351,41 @@ public class InputSM implements JMFormInterface {
         
         return ret;
     }
+    private List<File> scan(){
+        Result result = new AspriseScanUI().setRequest(new Request()
+        .setTwainCap( // Scan in color:
+          TwainConstants.ICAP_PIXELTYPE, TwainConstants.TWPT_RGB)
+        .setTwainCap( // Paper size: US letter
+          TwainConstants.ICAP_SUPPORTEDSIZES, TwainConstants.TWSS_USLETTER)
+        .addOutputItem(
+           new RequestOutputItem(Imaging.OUTPUT_SAVE, Imaging.FORMAT_JPG)
+             .setSavePath(".\\${TMS}${EXT}") // Timestamp as file name
+        )
+        .addOutputItem(
+           new RequestOutputItem(Imaging.OUTPUT_SAVE_THUMB, 
+             Imaging.FORMAT_JPG).setSavePath(".\\${TMS}-thumb${EXT}")
+        )
+       ).showDialog(null, "Scan", true, null); // owner can be null
+
+      return result.getImageFiles(); // Gets files
+    }
+    private void imageFromScanner(){
+        List<File> imgs=this.scan();
+        if(imgs==null)return;
+        for(File img:imgs){
+            String source= img.getPath();
+            int i=1;
+            
+            String tmp=JMFunctions.getCacheDir()+"/image";
+            String dest=JMFunctions.getCacheDir()+"/image.tmp";
+            while(JMFunctions.fileExist(new File(dest))){
+                dest=tmp+i+++".tmp";
+            }
+            JMFunctions.copyFile(source, dest);//SCANNED IMAGE
+            this.fIdImgSM.addImage(dest);
+        }
+        this.table.getCurrentRow().setValueFromString(14, "0");
+    }
     
     private void saveImages(){
         List<String> paths=this.fIdImgSM.getPaths();
@@ -354,12 +397,17 @@ public class InputSM implements JMFormInterface {
                 String idDet=id+JMFormatCollection.leadingZero(i+1, 10);
                 String url=JMFunctions.getDocDir()+"/docs/sm/"+id+"/"+(i+1)+".jpg";
                 
-                if(!paths.get(i).equals(url)){
-                    JMFunctions.moveFile(new File(paths.get(i)), new File(url));
+                String validS=paths.get(i).replaceAll("\\\\", "/");
+                String validD=url.replaceAll("\\\\", "/");
+                
+                if(!validS.equals(validD)){
+                    JMFunctions.trace(validS+"                 KE               "+validD);
+                    //JMFunctions.deleteFile(new File(validD));
+                    JMFunctions.moveFile(new File(validS), new File(validD));
                 }
                 
-                if(i==0)qU+="'"+idDet+"','"+id+"','"+url+"','"+i+"')";
-                else qU+=",('"+idDet+"','"+id+"','"+url+"','"+i+"')";
+                if(i==0)qU+="'"+idDet+"','"+id+"','"+validD+"','"+(i+1)+"')";
+                else qU+=",('"+idDet+"','"+id+"','"+validD+"','"+(i+1)+"')";
             }
         }
         this.deleteImageTmps();

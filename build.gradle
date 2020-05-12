@@ -13,6 +13,8 @@ dependencies {
     testImplementation     'junit:junit:4.13'
     implementation project(path: ':JMPCFramework')
     implementation project(path: ':JMPCFramework:JMJavaFramework')
+    // https://mvnrepository.com/artifact/com.asprise.imaging/java-scanner-access-twain
+    implementation group: 'com.asprise.imaging', name: 'java-scanner-access-twain', version: '[12,)'
 }
 
 /*processResources{
