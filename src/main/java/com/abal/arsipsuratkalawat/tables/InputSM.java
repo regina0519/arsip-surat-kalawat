@@ -242,8 +242,13 @@ public class InputSM implements JMFormInterface {
         this.fIdImgSM.setAddAction(new Runnable(){
             @Override
             public void run() {
-                //InputSM.this.imageFromBrowser();
-                InputSM.this.imageFromScanner();
+                
+                String operSys = System.getProperty("os.name").toLowerCase();
+                if (operSys.contains("win")) {
+                    InputSM.this.imageFromScanner();
+                }else{
+                    InputSM.this.imageFromBrowser();
+                }
             }
         });
         /*this.btnGroup.getBtnEdit().setAction(new Runnable(){
