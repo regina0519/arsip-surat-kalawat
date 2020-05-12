@@ -254,7 +254,8 @@ public class FormTes3 extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        this.imgs.addImage("");
+        //this.imgs.addImage("");
+        JMFunctions.moveFile(new File(JMFunctions.getCacheDir()+"/tesgina"), new File(JMFunctions.getCacheDir()+"/haha/tesgina"));
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

@@ -10,6 +10,7 @@ import com.abal.arsipsuratkalawat.FormView;
 import com.abal.arsipsuratkalawat.FormViewAgenda;
 import com.abal.arsipsuratkalawat.R;
 import com.thowo.jmjavaframework.JMFormInterface;
+import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.db.JMResultSet;
 import com.thowo.jmjavaframework.table.JMRow;
@@ -305,7 +306,7 @@ public class InputSM implements JMFormInterface {
         String dest=JMFunctions.getCacheDir()+"/image.tmp";
         while(JMFunctions.fileExist(new File(dest))){
             JMFunctions.deleteFile(new File(dest));
-            dest+=i++;
+            dest=JMFunctions.getCacheDir()+"/image"+ i++ +".tmp";
         }
     }
     private String imageFromBrowser(){
@@ -317,26 +318,53 @@ public class InputSM implements JMFormInterface {
 
         int option = fileChooser.showOpenDialog(null);
         if(option == JFileChooser.APPROVE_OPTION){
-           File file = fileChooser.getSelectedFile();
-           source= file.getPath();
+            File file = fileChooser.getSelectedFile();
+            source= file.getPath();
+            int i=1;
+            
+            String tmp=JMFunctions.getCacheDir()+"/image";
+            String dest=JMFunctions.getCacheDir()+"/image.tmp";
+            while(JMFunctions.fileExist(new File(dest))){
+                dest=tmp+i+++".tmp";
+            }
+            //this.deleteImageTmps();
+
+            JMFunctions.copyFile(source, dest);//SCANNED IMAGE
+            ret=dest;
+            JMFunctions.trace("++++++++++++++++++++++++++++++++++++++++     "+ret);
+            this.fIdImgSM.addImage(ret);
+            
+            this.table.getCurrentRow().setValueFromString(14, "0");
+            //JMFunctions.trace(JMFunctions.getCacheDir()+"/image.tmp");
         }else{
            JMFunctions.trace("Open Image canceled");
         }
         
-        int i=1;
-        String tmp=JMFunctions.getCacheDir()+"/image";
-        String dest=JMFunctions.getCacheDir()+"/image.tmp";
-        while(JMFunctions.fileExist(new File(dest))){
-            dest=tmp+i+++".tmp";
-        }
-        //this.deleteImageTmps();
         
-        JMFunctions.copyFile(source, dest);//SCANNED IMAGE
-        ret=dest;
-        JMFunctions.trace("++++++++++++++++++++++++++++++++++++++++     "+ret);
-        this.fIdImgSM.addImage(ret);
-        //JMFunctions.trace(JMFunctions.getCacheDir()+"/image.tmp");
         return ret;
+    }
+    
+    private void saveImages(){
+        List<String> paths=this.fIdImgSM.getPaths();
+        String id=this.fIdSM.getText();
+        String qD="delete from gambar_sm where id_sm='"+id+"'";
+        String qU="replace into gambar_sm values(";
+        if(!paths.isEmpty()){
+            for(int i=0;i<paths.size();i++){
+                String idDet=id+JMFormatCollection.leadingZero(i+1, 10);
+                String url=JMFunctions.getDocDir()+"/docs/sm/"+id+"/"+(i+1)+".jpg";
+                
+                if(!paths.get(i).equals(url)){
+                    JMFunctions.moveFile(new File(paths.get(i)), new File(url));
+                }
+                
+                if(i==0)qU+="'"+idDet+"','"+id+"','"+url+"','"+i+"')";
+                else qU+=",('"+idDet+"','"+id+"','"+url+"','"+i+"')";
+            }
+        }
+        this.deleteImageTmps();
+        JMFunctions.getCurrentConnection().queryUpdateMySQL(qD, true);
+        JMFunctions.getCurrentConnection().queryUpdateMySQL(qU, true);
     }
     
     
@@ -364,6 +392,7 @@ public class InputSM implements JMFormInterface {
     public void actionAfterSaved(String updateQuery,boolean saved) {
         this.setEditMode(!saved);
         this.btnGroup.stateNav();
+        this.saveImages();
         this.refreshImages();
         //this.refreshAutocomplete();
         this.setTembusan();
