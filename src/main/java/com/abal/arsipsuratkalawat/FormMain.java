@@ -21,12 +21,18 @@ import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblaf;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -34,7 +40,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author Regina
  */
-public class FormMain extends JMPCForm {
+public class FormMain extends JMPCForm implements IFilter {
     public static final int MENU_SM=0;
     public static final int MENU_SK=1;
     public static final int MENU_OPD=2;
@@ -44,6 +50,10 @@ public class FormMain extends JMPCForm {
     
     private JMPCInputStringTFWeblaf search;
     private int currentMenu=MENU_SM;
+    private FormAdvance filter;
+    private boolean filtered;
+    private Timer animFilter;
+    private String queryFilter;
     
 
     /**h
@@ -53,6 +63,10 @@ public class FormMain extends JMPCForm {
         initComponents();
         super.setContent(this.jPanelMain, new JMPCLoadingSprite());
         this.initModule();
+        Global.setActiveYear(new JMDate().getYearFull());
+        this.jSpinner1.setValue(Global.getActiveYear());
+        
+        
         this.jPanel10.setLayout(new BorderLayout());
         this.search=JMPCInputStringTFWeblaf.create("", R.label("PROMPT_SEARCH"), 15, 20, true);
         this.jPanel10.add(this.search,BorderLayout.EAST);
@@ -63,8 +77,30 @@ public class FormMain extends JMPCForm {
         
         //super.toggleFullscreen(true);
         this.initAccess();
-        //this.gotoMenu(this.currentMenu);
+        this.gotoMenu(this.currentMenu);
         this.addListener();
+        this.setOnFiltered(false);
+        
+    }
+    
+    public void setOnFiltered(boolean filtered){
+        JMFunctions.trace(filtered+"");
+        this.jLabel2.setVisible(!filtered);
+        this.jSpinner1.setVisible(!filtered);
+        if(this.animFilter!=null)this.animFilter.stop();
+        if(filtered){
+            this.animFilter=new Timer(300,new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    FormMain.this.jLabel3.setVisible(!FormMain.this.jLabel3.isVisible());
+                }
+            });
+            this.animFilter.start();
+        }else{
+            this.animFilter=null;
+        }
+        this.jLabel3.setVisible(filtered);
+        
     }
     
     private void addListener(){
@@ -78,12 +114,17 @@ public class FormMain extends JMPCForm {
     }
     
     public void gotoMenu(int menu){
+        this.jButton6.setVisible(false);
+        this.filtered=false;
+        this.search.setText("");
         if(menu==FormMain.MENU_SM){
             this.gotoSM();
             this.currentMenu=FormMain.MENU_SM;
+            this.jButton6.setVisible(true);
         }else if(menu==FormMain.MENU_SK){
             this.gotoSK();
             this.currentMenu=FormMain.MENU_SK;
+            this.jButton6.setVisible(true);
         }else if(menu==FormMain.MENU_OPD){
             this.gotoOPD();
             this.currentMenu=FormMain.MENU_OPD;
@@ -117,12 +158,15 @@ public class FormMain extends JMPCForm {
             "WHERE surat_masuk.id_user=user.id_user\n" +
             " and YEAR(surat_masuk.tgl_terima)='"+this.jSpinner1.getValue()+"'\n" +
             "ORDER BY tgl_terima desc";
+        
         TableSM smTbl=TableSM.create(q, FormMain.this);
         this.search.setAction(smTbl.filter(this.search));
         this.jLabel1.setText("Agenda Surat Masuk");
     }
     private void gotoSK(){
         this.jLabel1.setText("Agenda Surat Keluar");
+        String q;
+        if(this.filtered)q=this.queryFilter;
     }
     private void gotoOPD(){
         if(!Global.getAdmin())return;
@@ -203,9 +247,12 @@ public class FormMain extends JMPCForm {
         jPanel9 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel15 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
+        jButton6 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jPanel14 = new javax.swing.JPanel();
@@ -294,7 +341,7 @@ public class FormMain extends JMPCForm {
                 .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5)
-                .addContainerGap(205, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -351,6 +398,26 @@ public class FormMain extends JMPCForm {
             }
         });
 
+        jLabel3.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 14, 32));
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/warning_small.png"))); // NOI18N
+        jLabel3.setText("mode pencarian sedang aktif");
+        jLabel3.setIconTextGap(10);
+        jLabel3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+
+        jPanel15.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
+        jPanel15.setLayout(jPanel15Layout);
+        jPanel15Layout.setHorizontalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 24, Short.MAX_VALUE)
+        );
+        jPanel15Layout.setVerticalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
@@ -360,15 +427,23 @@ public class FormMain extends JMPCForm {
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jSpinner1)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(3, 3, 3))
+                    .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -410,15 +485,30 @@ public class FormMain extends JMPCForm {
 
         jPanel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/advance_search_small.png"))); // NOI18N
+        jButton6.setText("Pencarian Lanjutan");
+        jButton6.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 234, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton6)
+                .addContainerGap())
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 33, Short.MAX_VALUE)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton6)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
@@ -473,7 +563,7 @@ public class FormMain extends JMPCForm {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 237, Short.MAX_VALUE)
         );
 
         jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -614,6 +704,18 @@ public class FormMain extends JMPCForm {
         
     }//GEN-LAST:event_jSpinner1MouseClicked
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        if(this.currentMenu==FormMain.MENU_SM){
+            if(this.filter==null)this.filter=FormAdvance.create(this, true).formMain(this).mode(FormAdvance.MODE_SURAT_MASUK);
+            this.filter.setVisible(true);
+        }else if(this.currentMenu==FormMain.MENU_SK){
+            if(this.filter==null)this.filter=FormAdvance.create(this, true).formMain(this).mode(FormAdvance.MODE_SURAT_KELUAR);
+            this.filter.setVisible(true);
+        }
+        
+    }//GEN-LAST:event_jButton6ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -655,15 +757,18 @@ public class FormMain extends JMPCForm {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jFilterMsg;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
+    private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -675,4 +780,70 @@ public class FormMain extends JMPCForm {
     private javax.swing.JPanel jPanelMain;
     private javax.swing.JSpinner jSpinner1;
     // End of variables declaration//GEN-END:variables
+
+
+    @Override
+    public void filterSK(JMDate tglSuratFrom, JMDate tglSuratTo, JMDate tglKirimFrom, JMDate tglKirimTo) {
+        this.setOnFiltered(!(tglSuratFrom==null && tglSuratTo==null && tglKirimFrom==null && tglKirimTo==null));
+    }
+
+    @Override
+    public void filterSM(JMDate tglSuratFrom, JMDate tglSuratTo, JMDate tglTerimaFrom, JMDate tglTerimaTo, int tembusanMode) {
+        boolean onFiltered=!(tglSuratFrom==null && tglSuratTo==null && tglTerimaFrom==null && tglTerimaTo==null && tembusanMode==FormAdvance.TEMBUSAN_NULL);
+        this.setOnFiltered(onFiltered);
+        if(!onFiltered)this.gotoMenu(MENU_SM);
+        this.search.setText("");
+        
+        String fltrTglSuratQ=null;
+        String fltrTglTerimaQ=null;
+        String fltrTembQ=null;
+        
+        if(tglSuratFrom!=null && tglSuratTo!=null)fltrTglSuratQ="(surat_masuk.tgl_sm>='"+tglSuratFrom.dateDB()+"' and surat_masuk.tgl_sm<='"+tglSuratTo.dateDB()+"')";
+        if(tglTerimaFrom!=null && tglTerimaTo!=null)fltrTglTerimaQ="(surat_masuk.tgl_terima>='"+tglTerimaFrom.dateDB()+"' and surat_masuk.tgl_terima<='"+tglTerimaTo.dateDB()+"')";
+        if(tembusanMode==FormAdvance.TEMBUSAN_TRUE)fltrTembQ="(surat_masuk.tembusan_sm='1')";
+        else if(tembusanMode==FormAdvance.TEMBUSAN_FALSE)fltrTembQ="(surat_masuk.tembusan_sm='0')";
+        
+        String qAdd="";
+        if(fltrTglSuratQ!=null)qAdd=fltrTglSuratQ;
+        if(fltrTglTerimaQ!=null){
+            if(qAdd.equals(""))qAdd=fltrTglTerimaQ;
+            else qAdd+=" and "+fltrTglTerimaQ;
+        }
+        if(fltrTembQ!=null){
+            if(qAdd.equals(""))qAdd=fltrTembQ;
+            else qAdd+=" and "+fltrTembQ;
+        }
+        
+        this.queryFilter="SELECT \n" +
+            "surat_masuk.id_sm AS id_sm,\n" +
+            "surat_masuk.no_agenda AS no_agenda,\n" +
+            "surat_masuk.no_sm AS no_sm,\n" +
+            "surat_masuk.tgl_sm AS tgl,\n" +
+            "surat_masuk.asal_sm AS asal_sm,\n" +
+            "surat_masuk.perihal_sm AS perihal_sm,\n" +
+            "surat_masuk.sifat_sm AS sifat_sm,\n" +
+            "surat_masuk.lampiran_sm AS lampiran_sm,\n" +
+            "surat_masuk.tgl_terima AS tgl_terima,\n" +
+            "surat_masuk.id_user AS id_user,\n" +
+            "user.nama_user AS nama_user,\n" +
+            "surat_masuk.tembusan_sm AS tembusan_sm,\n" +
+            "surat_masuk.tujuan_sm AS tujuan_sm,\n" +
+            "surat_masuk.ket_sm AS ket_sm,\n" +
+            "surat_masuk.id_sm AS id_img\n" +
+            "FROM surat_masuk,user\n" +
+            "WHERE (surat_masuk.id_user=user.id_user)\n";
+        
+        if(!qAdd.equals("")) this.queryFilter+=" and "+qAdd+" ORDER BY tgl_terima desc";
+        
+        JMFunctions.trace(this.queryFilter);
+        
+        
+        TableSM smTbl=TableSM.create(this.queryFilter, FormMain.this);
+        //this.search.setAction(smTbl.filter(this.search));
+        this.jLabel1.setText("Agenda Surat Masuk");
+        
+        
+        this.currentMenu=FormMain.MENU_SM;
+        
+    }
 }

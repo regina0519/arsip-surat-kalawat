@@ -70,7 +70,7 @@ public class TableSM implements JMFormInterface{
                 .setLabel(12,R.label("TUJUAN_SM"))
                 .setLabel(13,R.label("KET_SM"))
                 .setLabel(14,R.label("ID_SM"))
-                .setColHidden(0).setColHidden(3).setColHidden(6).setColHidden(7).setColHidden(8).setColHidden(9).setColHidden(12).setColHidden(13).setColHidden(14)
+                .setColHidden(0).setColHidden(3).setColHidden(6).setColHidden(7).setColHidden(9).setColHidden(12).setColHidden(13).setColHidden(14)
                 .addFormat(11, JMResultSetStyle.FORMAT_IMAGE, tembusanImg);
         this.dbObject.refresh();
         List<Integer> excluded=new ArrayList();
@@ -194,6 +194,7 @@ public class TableSM implements JMFormInterface{
             @Override
             public void run() {
                 TableSM.this.dbObject.filter(textField.getText());
+                TableSM.this.parent.setOnFiltered(!textField.getText().equals(""));
             }
         };
     }
@@ -308,11 +309,12 @@ public class TableSM implements JMFormInterface{
     @Override
     public void actionAfterFiltered(String filter) {
         this.parent.setSearch(filter);
+        
     }
 
     @Override
     public void actionBeforeFilter(String filter) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
     
 }

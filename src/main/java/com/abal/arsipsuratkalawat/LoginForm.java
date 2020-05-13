@@ -178,6 +178,7 @@ public class LoginForm extends JMPCForm {
         if(valid){
             this.setVisible(false);
             new FormMain().setVisible(true);
+            //new FormAdvance(this,true).setVisible(true);
             //new FormTes3().setVisible(true);
 
 

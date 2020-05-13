@@ -13,7 +13,14 @@ public class Global {
     private static String user;
     private static boolean editor=true;//SEMENTARA
     private static boolean admin=true;//SEMENTARA
+    private static int activeYear=2020;
     
+    public static int getActiveYear(){
+        return activeYear;
+    }
+    public static void setActiveYear(int year){
+        activeYear=year;
+    }
     public static String getUser(){
         return user;
     }
