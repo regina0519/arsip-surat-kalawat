@@ -6,7 +6,6 @@
 package com.abal.arsipsuratkalawat.tables;
 
 import com.abal.arsipsuratkalawat.FormMain;
-import com.abal.arsipsuratkalawat.Global;
 import com.abal.arsipsuratkalawat.R;
 import com.thowo.jmjavaframework.JMFormInterface;
 import com.thowo.jmjavaframework.JMFormatCollection;
@@ -23,7 +22,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
@@ -33,22 +31,22 @@ import javax.swing.JScrollPane;
  *
  * @author Regina
  */
-public class TableSM implements JMFormInterface{
-    private final String title=R.label("TITLE_SM");
+public class TableSK implements JMFormInterface{
+    private final String title=R.label("TITLE_SK");
     private final String queryView;
     private final JMTable dbObject;
     private final JMPCTable table;
     private final JMPCDBButtonGroup btnGroup;
     private final List<Integer> primaryKeys;
     private final FormMain parent;
-    private InputSM inputSM;
+    private InputSK inputSK;
     private int activeYear=2020;//============== 4 DIGIT ONLY
     
-    public static TableSM create(String query,FormMain parent){
-        return new TableSM(query,parent);
+    public static TableSK create(String query,FormMain parent){
+        return new TableSK(query,parent);
     }
     
-    public TableSM(String query,FormMain parent){
+    public TableSK(String query,FormMain parent){
         this.parent=parent;
         this.queryView=query;
         this.activeYear=this.parent.getYear();
@@ -57,27 +55,24 @@ public class TableSM implements JMFormInterface{
         this.dbObject=JMTable.create(this.queryView,JMTable.DBTYPE_MYSQL);
         
         this.dbObject.getStyle()
-                .setLabel(0,R.label("ID_SM"))
-                .setLabel(1,R.label("NO_AGENDA_SM"))
-                .setLabel(2,R.label("NO_SM"))
-                .setLabel(3,R.label("TGL_SM"))
-                .setLabel(4,R.label("ASAL_SM"))
-                .setLabel(5,R.label("PERIHAL_SM"))
-                .setLabel(6,R.label("SIFAT_SM"))
-                .setLabel(7,R.label("LAMPIRAN_SM"))
-                .setLabel(8,R.label("TGL_TERIMA_SM"))
-                .setLabel(9,R.label("ID_USER_SM"))
-                .setLabel(10,R.label("NAMA_USER_SM"))
-                .setLabel(11,R.label("TEMBUSAN_SM"))
-                .setLabel(12,R.label("TUJUAN_SM"))
-                .setLabel(13,R.label("KET_SM"))
-                .setLabel(14,R.label("ID_SM"))
-                .setColHidden(0).setColHidden(3).setColHidden(6).setColHidden(7).setColHidden(9).setColHidden(12).setColHidden(13).setColHidden(14)
-                .addFormat(11, JMResultSetStyle.FORMAT_IMAGE, tembusanImg);
+                .setLabel(0,R.label("ID_SK"))
+                .setLabel(1,R.label("NO_AGENDA_SK"))
+                .setLabel(2,R.label("NO_SK"))
+                .setLabel(3,R.label("TGL_SK"))
+                .setLabel(4,R.label("PERIHAL_SK"))
+                .setLabel(5,R.label("TUJUAN_SK"))
+                .setLabel(6,R.label("SIFAT_SK"))
+                .setLabel(7,R.label("LAMPIRAN_SK"))
+                .setLabel(8,R.label("TGL_KELUAR_SK"))
+                .setLabel(9,R.label("ID_USER_SK"))
+                .setLabel(10,R.label("NAMA_USER_SK"))
+                .setLabel(11,R.label("KET_SK"))
+                .setLabel(12,R.label("ID_SK"))
+                .setColHidden(0).setColHidden(0).setColHidden(6).setColHidden(7).setColHidden(8).setColHidden(9).setColHidden(11).setColHidden(12);
         this.dbObject.refresh();
         List<Integer> excluded=new ArrayList();
         excluded.add(10);
-        excluded.add(14);
+        excluded.add(12);
         this.dbObject.excludeColumnsFromUpdate(excluded);
         this.dbObject.addInterface(this);
         this.dbObject.setName("surat_masuk");
@@ -111,8 +106,7 @@ public class TableSM implements JMFormInterface{
     }
     
     private void openForm(boolean editing, boolean adding){
-        this.inputSM=InputSM.create(TableSM.this.dbObject,parent,editing,adding);
-        //InputSM.create(TableSM.this.dbObject,parent,editing,adding);
+        this.inputSK=InputSK.create(TableSK.this.dbObject,parent,editing,adding);
     }
     
     
@@ -131,7 +125,7 @@ public class TableSM implements JMFormInterface{
             @Override
             public void keyReleased(KeyEvent e) {
                 if(e.getKeyCode()==e.VK_ENTER){
-                    TableSM.this.openForm(false,false);
+                    TableSK.this.openForm(false,false);
                 }
             }
         });
@@ -140,7 +134,7 @@ public class TableSM implements JMFormInterface{
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount()==2 && !e.isConsumed()){
-                    TableSM.this.openForm(false,false);
+                    TableSK.this.openForm(false,false);
                 }
             }
 
@@ -168,19 +162,19 @@ public class TableSM implements JMFormInterface{
         this.btnGroup.getBtnAdd().addAction(new Runnable(){
             @Override
             public void run() {
-                TableSM.this.openForm(true,true);
+                TableSK.this.openForm(true,true);
             }
         });
         this.btnGroup.getBtnEdit().addAction(new Runnable(){
             @Override
             public void run() {
-                TableSM.this.openForm(true,false);
+                TableSK.this.openForm(true,false);
             }
         });
         this.btnGroup.getBtnView().addAction(new Runnable(){
             @Override
             public void run() {
-                TableSM.this.openForm(false,false);
+                TableSK.this.openForm(false,false);
             }
         });
         
@@ -196,17 +190,18 @@ public class TableSM implements JMFormInterface{
         return new Runnable(){
             @Override
             public void run() {
-                TableSM.this.dbObject.filter(textField.getText());
-                TableSM.this.parent.setOnFiltered(!textField.getText().equals(""));
+                TableSK.this.dbObject.filter(textField.getText());
+                TableSK.this.parent.setOnFiltered(!textField.getText().equals(""));
             }
         };
     }
 
     private String getNewId(){
         String ret="";
-        String q="select id_sm from surat_masuk where id_sm like '%SM"+this.activeYear+"%' order by id_sm desc";
+        int id=1;
+        String q="select id_sk from surat_keluar where id_sk like '%SK"+this.activeYear+"%' order by id_sk desc";
         JMResultSet r=JMFunctions.getCurrentConnection().queryMySQL(q, true);
-        Integer v=0;
+        Integer v=1;
         if(r.first()){
             String str=r.getString(0);
             str=str.substring(6);
@@ -217,9 +212,10 @@ public class TableSM implements JMFormInterface{
     }
     private String getNewReg(){
         String ret="";
-        String q="select no_agenda from surat_masuk where id_sm like '%SM"+this.activeYear+"%' order by no_agenda desc";
+        int id=1;
+        String q="select no_agenda from surat_keluar where id_sk like '%SK"+this.activeYear+"%' order by no_agenda desc";
         JMResultSet r=JMFunctions.getCurrentConnection().queryMySQL(q, true);
-        Integer v=0;
+        Integer v=1;
         String str="";
         if(r.first()){
             str=r.getString(0);
@@ -229,7 +225,7 @@ public class TableSM implements JMFormInterface{
             }catch(NumberFormatException e){
                 
             }
-        }else str="001";
+        }
         ret=str;
         return ret;
     }
@@ -240,11 +236,6 @@ public class TableSM implements JMFormInterface{
     public void actionAfterAdded(JMRow rowAdded) {
         rowAdded.setValueFromString(0, this.getNewId());
         rowAdded.setValueFromString(1, this.getNewReg());
-        rowAdded.setValueFromString(9, Global.getUser());
-        JMResultSet r=JMFunctions.getCurrentConnection().queryMySQL("select * from user where id_user='"+Global.getUser()+"'", Boolean.TRUE);
-        if(r.first()){
-            rowAdded.setValueFromString(10, r.getString("nama_user"));
-        }
     }
 
     @Override

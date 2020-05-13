@@ -175,6 +175,7 @@ public class LoginForm extends JMPCForm {
         // TODO add your handling code here:
         boolean valid=this.login();
         valid=true;//SEMENTARA
+        Global.setUser("PNS_198503272009032004");//SEMENTARA
         if(valid){
             this.setVisible(false);
             new FormMain().setVisible(true);

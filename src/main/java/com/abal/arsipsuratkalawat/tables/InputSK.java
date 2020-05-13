@@ -48,7 +48,7 @@ import javax.swing.WindowConstants;
  *
  * @author Regina
  */
-public class InputSM implements JMFormInterface {
+public class InputSK implements JMFormInterface {
     private final String title=R.label("TITLE_SM");
     private final JMTable table;
     private final FormViewAgenda form;
@@ -75,11 +75,11 @@ public class InputSM implements JMFormInterface {
     private boolean editMode=false;
     private boolean formClosing=false;
     
-    public static InputSM create(JMTable table,FormMain parent,boolean editing,boolean adding){
-        return new InputSM(table,parent,editing,adding);
+    public static InputSK create(JMTable table,FormMain parent,boolean editing,boolean adding){
+        return new InputSK(table,parent,editing,adding);
     }
     
-    public InputSM(JMTable table,FormMain parent,boolean editing,boolean adding){
+    public InputSK(JMTable table,FormMain parent,boolean editing,boolean adding){
         
         this.parent=parent;
         this.form=new FormViewAgenda(this.parent,true);
@@ -162,13 +162,7 @@ public class InputSM implements JMFormInterface {
         
         this.setEditMode(editing);
         //this.table.getCurrentRow().displayInterface(false);
-        if(!adding){
-            this.table.viewRow();
-            if(editing){
-                this.table.editRow();
-            }
-            
-        }
+        this.table.viewRow();
         this.init=false;
         
         
@@ -209,11 +203,11 @@ public class InputSM implements JMFormInterface {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                if(InputSM.this.editMode){
-                    InputSM.this.formClosing=true;
-                    InputSM.this.btnGroup.btnCancelClick();
+                if(InputSK.this.editMode){
+                    InputSK.this.formClosing=true;
+                    InputSK.this.btnGroup.btnCancelClick();
                 }else{
-                    InputSM.this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                    InputSK.this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 }
             }
 
@@ -245,7 +239,7 @@ public class InputSM implements JMFormInterface {
         this.fTembusanSM.setAction(new Runnable(){
             @Override
             public void run() {
-                InputSM.this.setTembusan();
+                InputSK.this.setTembusan();
             }
         });
         this.fIdImgSM.setAddAction(new Runnable(){
@@ -254,9 +248,9 @@ public class InputSM implements JMFormInterface {
                 
                 String operSys = System.getProperty("os.name").toLowerCase();
                 if (operSys.contains("win")) {
-                    InputSM.this.imageFromScanner();
+                    InputSK.this.imageFromScanner();
                 }else{
-                    InputSM.this.imageFromBrowser();
+                    InputSK.this.imageFromBrowser();
                 }
             }
         });
@@ -293,15 +287,15 @@ public class InputSM implements JMFormInterface {
         }
     } 
     private void refreshImages(){
-        if(!InputSM.this.form.isVisible() && !InputSM.this.init)return;
-        InputSM.this.fIdImgSM.clearPaths();
-        String key=InputSM.this.fIdSM.getText();
+        if(!InputSK.this.form.isVisible() && !InputSK.this.init)return;
+        InputSK.this.fIdImgSM.clearPaths();
+        String key=InputSK.this.fIdSM.getText();
         String q="select * from gambar_sm where id_sm='"+key+"' order by halaman_sm asc";
         JMResultSet r=JMFunctions.getCurrentConnection().queryMySQL(q, true);
-        InputSM.this.fIdImgSM.setKeyValue(key);
+        InputSK.this.fIdImgSM.setKeyValue(key);
         if(r.first()){
             do{
-                InputSM.this.fIdImgSM.addImage(r.getString(2));
+                InputSK.this.fIdImgSM.addImage(r.getString(2));
             }while(r.next());
         }
     } 
@@ -398,7 +392,6 @@ public class InputSM implements JMFormInterface {
     
     private void saveImages(){
         List<String> paths=this.fIdImgSM.getPaths();
-        if(paths==null)return;
         String id=this.fIdSM.getText();
         String qD="delete from gambar_sm where id_sm='"+id+"'";
         String qU="replace into gambar_sm values(";
@@ -411,7 +404,8 @@ public class InputSM implements JMFormInterface {
                 String validD=url.replaceAll("\\\\", "/");
                 
                 if(!validS.equals(validD)){
-                    JMFunctions.moveFileReplace(new File(validS), new File(validD));
+                    JMFunctions.deleteFile(new File(validD));
+                    JMFunctions.moveFile(new File(validS), new File(validD));
                 }
                 
                 if(i==0)qU+="'"+idDet+"','"+id+"','"+validD+"','"+(i+1)+"')";
@@ -422,7 +416,6 @@ public class InputSM implements JMFormInterface {
         }
         this.deleteImageTmps();
     }
-    
     
     
     
@@ -438,24 +431,15 @@ public class InputSM implements JMFormInterface {
 
     @Override
     public void actionAfterDeleted(JMRow rowDeleted, boolean deleted) {
-        if(deleted){
-            JMFunctions.trace("DELETED");
-            JMFunctions.getCurrentConnection().queryUpdateMySQL("delete from gambar_sm where id_sm='"+rowDeleted.getCells().get(0).getDBValue()+"'", true);
-            JMFunctions.deleteFolder(new File(JMFunctions.getDocDir()+"/docs/sm/"+rowDeleted.getCells().get(0).getDBValue()));
-        }else{
-            JMFunctions.trace("NOT DELETED");
-        }
         this.setEditMode(false);
         this.row=this.table.getCurrentRow();
         this.refreshImages();
         //this.refreshAutocomplete();
         this.setTembusan();
-        
     }
 
     @Override
     public void actionAfterSaved(String updateQuery,boolean saved) {
-        JMFunctions.trace("===============================   SAVED");
         this.setEditMode(!saved);
         this.btnGroup.stateNav();
         this.saveImages();
@@ -551,7 +535,7 @@ public class InputSM implements JMFormInterface {
             if(canceled){
                 this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             }else{
-                InputSM.this.form.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                InputSK.this.form.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             }
         }else{
             this.setEditMode(!canceled);
