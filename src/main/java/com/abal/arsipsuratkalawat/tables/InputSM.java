@@ -130,7 +130,7 @@ public class InputSM implements JMFormInterface {
         this.fTembusanSM=JMPCSwitchWeblaf.create(R.label("TEMBUSAN_TRUE"),R.label("TEMBUSAN_FALSE"), 20, width, horizontal).setEditable(true);
         this.fTujuanSM=JMPCInputStringTFWeblaf.create(R.label("TUJUAN_SM"),R.label("PROMPT_TUJUAN_SM"), 20, width, horizontal).setEditable(true);
         this.fKetSM=JMPCInputStringTFWeblaf.create(R.label("KET_SM"),R.label("PROMPT_KET_SM"), 20, width, horizontal).setEditable(true);
-        this.fIdImgSM=JMPCImagesViewerDB.create(250,250).setEditable(true);
+        this.fIdImgSM=JMPCImagesViewerDB.create(200,200).setEditable(true);
         
         
         this.table.setFormInterface(this.fIdSM, 0,true);

@@ -126,7 +126,7 @@ public class InputSK implements JMFormInterface {
         this.fNamaUserSK=JMPCInputStringTFWeblaf.create(R.label("NAMA_USER_SK"),R.label("PROMPT_NAMA_USER_SK"), 20, width, horizontal).setEditable(false);
         this.fTujuanSK=JMPCInputStringTFWeblaf.create(R.label("TUJUAN_SK"),R.label("PROMPT_TUJUAN_SK"), 20, width, horizontal).setEditable(true);
         this.fKetSK=JMPCInputStringTFWeblaf.create(R.label("KET_SK"),R.label("PROMPT_KET_SK"), 20, width, horizontal).setEditable(true);
-        this.fIdImgSK=JMPCImagesViewerDB.create(250,250).setEditable(true);
+        this.fIdImgSK=JMPCImagesViewerDB.create(200,200).setEditable(true);
         
         
         this.table.setFormInterface(this.fIdSK, 0,true);
