@@ -18,14 +18,14 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
  * @author jimi
  */
 public class PassForm extends JMPCFormModal{
-    private LoginForm loginForm;
+    private FormLogin loginForm;
     private boolean commit=false;
     
     /**
      * Creates new form PassForm
      */
     
-    public PassForm setCaller(LoginForm loginForm){
+    public PassForm setCaller(FormLogin loginForm){
         this.loginForm=loginForm;
         return this;
     }
@@ -91,7 +91,10 @@ public class PassForm extends JMPCFormModal{
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setModal(true);
+        setUndecorated(true);
 
+        jPanelMain.setBackground(new java.awt.Color(35, 78, 121));
         jPanelMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -227,6 +230,7 @@ public class PassForm extends JMPCFormModal{
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

@@ -26,11 +26,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.Timer;
@@ -76,7 +80,7 @@ public class FormMain extends JMPCForm implements IFilter {
         JMDate now=new JMDate();
         this.jSpinner1.setValue(Integer.valueOf(now.getYearFull()));
         
-        //super.toggleFullscreen(true);
+        super.toggleFullscreen(true);
         this.initAccess();
         this.gotoMenu(this.currentMenu);
         this.addListener();
@@ -104,6 +108,101 @@ public class FormMain extends JMPCForm implements IFilter {
         
     }
     
+    
+    private void setActive(int menu){
+        JPanel me=null;
+        JLabel txt=null;
+        JLabel icon=null;
+        String img="";
+        if(menu==FormMain.MENU_SM){
+            me=this.menuSM;
+            txt=this.lblSM;
+            icon=this.iconSM;
+            img="/img/sm_s.png";
+            if(this.currentMenu!=FormMain.MENU_USER && this.currentMenu!=FormMain.MENU_OPD && this.currentMenu!=FormMain.MENU_SS)this.setInactive(-1);
+        }else if(menu==FormMain.MENU_SK){
+            me=this.menuSK;
+            txt=this.lblSK;
+            icon=this.iconSK;
+            img="/img/sk_s.png";
+            if(this.currentMenu!=FormMain.MENU_USER && this.currentMenu!=FormMain.MENU_OPD && this.currentMenu!=FormMain.MENU_SS)this.setInactive(-1);
+        }else if(menu==FormMain.MENU_OPD){
+            me=this.menuOPD;
+            txt=this.lblOPD;
+            icon=this.iconOPD;
+            img="/img/opd_s.png";
+            this.setActive(-1);
+        }else if(menu==FormMain.MENU_SS){
+            me=this.menuSifat;
+            txt=this.lblSifat;
+            icon=this.iconSifat;
+            img="/img/sifat_s.png";
+            this.setActive(-1);
+        }else if(menu==FormMain.MENU_USER){
+            me=this.menuUser;
+            txt=this.lblUser;
+            icon=this.iconUser;
+            img="/img/users_s.png";
+            this.setActive(-1);
+        }else{
+            me=this.menuSetting;
+            txt=this.lblSetting;
+            icon=this.iconSetting;
+            img="/img/setting_s.png";
+            this.showSubMenuSetting(true);
+        }
+        me.setBackground(Color.decode("#EEEEEE"));
+        txt.setForeground(Color.decode("#234E79"));
+        icon.setIcon(new ImageIcon(this.getClass().getResource(img)));
+    }
+    private void setInactive(int menu){
+        JPanel me=null;
+        JLabel txt=null;
+        JLabel icon=null;
+        String img="";
+        if(menu==FormMain.MENU_SM){
+            me=this.menuSM;
+            txt=this.lblSM;
+            icon=this.iconSM;
+            img="/img/sm.png";
+        }else if(menu==FormMain.MENU_SK){
+            me=this.menuSK;
+            txt=this.lblSK;
+            icon=this.iconSK;
+            img="/img/sk.png";
+        }else if(menu==FormMain.MENU_OPD){
+            me=this.menuOPD;
+            txt=this.lblOPD;
+            icon=this.iconOPD;
+            img="/img/opd.png";
+        }else if(menu==FormMain.MENU_SS){
+            me=this.menuSifat;
+            txt=this.lblSifat;
+            icon=this.iconSifat;
+            img="/img/sifat.png";
+        }else if(menu==FormMain.MENU_USER){
+            me=this.menuUser;
+            txt=this.lblUser;
+            icon=this.iconUser;
+            img="/img/users.png";
+        }else{
+            me=this.menuSetting;
+            txt=this.lblSetting;
+            icon=this.iconSetting;
+            img="/img/setting.png";
+            this.showSubMenuSetting(false);
+        }
+        me.setBackground(Color.decode("#234E79"));
+        txt.setForeground(Color.decode("#EEEEEE"));
+        icon.setIcon(new ImageIcon(this.getClass().getResource(img)));
+    }
+    private void showSubMenuSetting(boolean show){
+        this.subMenuSetting.setVisible(show && Global.getAdmin());
+        //this.menuOPD.setVisible(show && Global.getAdmin());
+        //this.menuSifat.setVisible(show && Global.getAdmin());
+        //this.menuUser.setVisible(show && Global.getAdmin());
+    }
+    
     private void addListener(){
         this.jSpinner1.addChangeListener(new ChangeListener(){
             @Override
@@ -112,9 +211,149 @@ public class FormMain extends JMPCForm implements IFilter {
                 else if(FormMain.this.currentMenu==FormMain.MENU_SK)FormMain.this.gotoMenu(MENU_SK);
             }
         });
+        
+        //MENU====================================
+        this.menuSM.addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                FormMain.this.gotoMenu(FormMain.MENU_SM);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {}
+
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                FormMain.this.setActive(FormMain.MENU_SM);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if(FormMain.this.currentMenu!=FormMain.MENU_SM)FormMain.this.setInactive(FormMain.MENU_SM);
+            }
+        });
+        this.menuSK.addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                FormMain.this.gotoMenu(FormMain.MENU_SK);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {}
+
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                FormMain.this.setActive(FormMain.MENU_SK);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if(FormMain.this.currentMenu!=FormMain.MENU_SK)FormMain.this.setInactive(FormMain.MENU_SK);
+            }
+        });
+        this.menuSifat.addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                FormMain.this.gotoMenu(FormMain.MENU_SS);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {}
+
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                FormMain.this.setActive(FormMain.MENU_SS);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if(FormMain.this.currentMenu!=FormMain.MENU_SS)FormMain.this.setInactive(FormMain.MENU_SS);
+            }
+        });
+        this.menuUser.addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                FormMain.this.gotoMenu(FormMain.MENU_USER);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {}
+
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                FormMain.this.setActive(FormMain.MENU_USER);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if(FormMain.this.currentMenu!=FormMain.MENU_USER)FormMain.this.setInactive(FormMain.MENU_USER);
+            }
+        });
+        this.menuOPD.addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                FormMain.this.gotoMenu(FormMain.MENU_OPD);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {}
+
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                FormMain.this.setActive(FormMain.MENU_OPD);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if(FormMain.this.currentMenu!=FormMain.MENU_OPD)FormMain.this.setInactive(FormMain.MENU_OPD);
+            }
+        });
+        this.menuSetting.addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                //FormMain.this.showSubMenuSetting(true);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {}
+
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                FormMain.this.setActive(-1);
+                FormMain.this.showSubMenuSetting(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if(FormMain.this.currentMenu!=FormMain.MENU_USER && FormMain.this.currentMenu!=FormMain.MENU_OPD && FormMain.this.currentMenu!=FormMain.MENU_SS){
+                    //FormMain.this.setInactive(-1);
+                    //FormMain.this.showSubMenuSetting(false);
+                }
+            }
+        });
+        
     }
     
     public void gotoMenu(int menu){
+        this.setInactive(this.currentMenu);
         this.jButton6.setVisible(false);
         this.filtered=false;
         this.search.setText("");
@@ -136,6 +375,7 @@ public class FormMain extends JMPCForm implements IFilter {
             this.gotoUSER();
             this.currentMenu=FormMain.MENU_USER;
         }
+        this.setActive(this.currentMenu);
     }
     
     private void gotoSM(){
@@ -210,9 +450,9 @@ public class FormMain extends JMPCForm implements IFilter {
     }
     
     private void initAccess(){
-        this.jButton3.setEnabled(Global.getAdmin());
-        this.jButton4.setEnabled(Global.getAdmin());        
-        this.jButton5.setEnabled(Global.getAdmin());        
+        //this.jButton3.setEnabled(Global.getAdmin());
+        //this.jButton4.setEnabled(Global.getAdmin());        
+        //this.jButton5.setEnabled(Global.getAdmin());        
     }
     
     public int getYear(){
@@ -254,12 +494,29 @@ public class FormMain extends JMPCForm implements IFilter {
         jPanelMain = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
         jPanel13 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        menuSM = new javax.swing.JPanel();
+        iconSM = new javax.swing.JLabel();
+        lblSM = new javax.swing.JLabel();
+        menuSK = new javax.swing.JPanel();
+        iconSK = new javax.swing.JLabel();
+        lblSK = new javax.swing.JLabel();
+        menuSetting = new javax.swing.JPanel();
+        iconSetting = new javax.swing.JLabel();
+        lblSetting = new javax.swing.JLabel();
+        subMenuSetting = new javax.swing.JPanel();
+        jPanel23 = new javax.swing.JPanel();
+        jPanel24 = new javax.swing.JPanel();
+        menuUser = new javax.swing.JPanel();
+        iconUser = new javax.swing.JLabel();
+        lblUser = new javax.swing.JLabel();
+        menuSifat = new javax.swing.JPanel();
+        iconSifat = new javax.swing.JLabel();
+        lblSifat = new javax.swing.JLabel();
+        menuOPD = new javax.swing.JPanel();
+        iconOPD = new javax.swing.JLabel();
+        lblOPD = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -280,60 +537,267 @@ public class FormMain extends JMPCForm implements IFilter {
         jFilterMsg = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
-        jPanelMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 204, 0)));
+        jPanelMain.setBackground(new java.awt.Color(35, 78, 121));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel1.setBackground(new java.awt.Color(35, 78, 121));
 
-        jPanel12.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel12.setOpaque(false);
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/main.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
         jPanel12Layout.setHorizontalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 108, Short.MAX_VALUE)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        jPanel13.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel13.setOpaque(false);
 
-        jButton1.setText("SM");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        menuSM.setBackground(new java.awt.Color(35, 78, 121));
 
-        jButton2.setText("SK");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
+        iconSM.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/sm.png"))); // NOI18N
 
-        jButton3.setText("OPD");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
+        lblSM.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lblSM.setForeground(new java.awt.Color(204, 204, 204));
+        lblSM.setText("Surat Masuk             ");
 
-        jButton4.setText("Sifat");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout menuSMLayout = new javax.swing.GroupLayout(menuSM);
+        menuSM.setLayout(menuSMLayout);
+        menuSMLayout.setHorizontalGroup(
+            menuSMLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuSMLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(iconSM)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblSM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        menuSMLayout.setVerticalGroup(
+            menuSMLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuSMLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(menuSMLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblSM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(iconSM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
 
-        jButton5.setText("User");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
+        menuSK.setBackground(new java.awt.Color(35, 78, 121));
+
+        iconSK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/sk.png"))); // NOI18N
+
+        lblSK.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lblSK.setForeground(new java.awt.Color(204, 204, 204));
+        lblSK.setText("Surat Keluar");
+
+        javax.swing.GroupLayout menuSKLayout = new javax.swing.GroupLayout(menuSK);
+        menuSK.setLayout(menuSKLayout);
+        menuSKLayout.setHorizontalGroup(
+            menuSKLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuSKLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(iconSK)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblSK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        menuSKLayout.setVerticalGroup(
+            menuSKLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuSKLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(menuSKLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblSK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(iconSK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        menuSetting.setBackground(new java.awt.Color(35, 78, 121));
+
+        iconSetting.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/setting.png"))); // NOI18N
+
+        lblSetting.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lblSetting.setForeground(new java.awt.Color(204, 204, 204));
+        lblSetting.setText("Pengaturan");
+
+        javax.swing.GroupLayout menuSettingLayout = new javax.swing.GroupLayout(menuSetting);
+        menuSetting.setLayout(menuSettingLayout);
+        menuSettingLayout.setHorizontalGroup(
+            menuSettingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuSettingLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(iconSetting)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblSetting, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        menuSettingLayout.setVerticalGroup(
+            menuSettingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuSettingLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(menuSettingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblSetting, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(iconSetting, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        subMenuSetting.setBackground(new java.awt.Color(35, 78, 121));
+
+        jPanel23.setBackground(new java.awt.Color(35, 78, 121));
+
+        javax.swing.GroupLayout jPanel23Layout = new javax.swing.GroupLayout(jPanel23);
+        jPanel23.setLayout(jPanel23Layout);
+        jPanel23Layout.setHorizontalGroup(
+            jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 40, Short.MAX_VALUE)
+        );
+        jPanel23Layout.setVerticalGroup(
+            jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jPanel24.setBackground(new java.awt.Color(35, 78, 121));
+
+        menuUser.setBackground(new java.awt.Color(35, 78, 121));
+
+        iconUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/users.png"))); // NOI18N
+
+        lblUser.setForeground(new java.awt.Color(204, 204, 204));
+        lblUser.setText("Pengguna");
+
+        javax.swing.GroupLayout menuUserLayout = new javax.swing.GroupLayout(menuUser);
+        menuUser.setLayout(menuUserLayout);
+        menuUserLayout.setHorizontalGroup(
+            menuUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuUserLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(iconUser)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        menuUserLayout.setVerticalGroup(
+            menuUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuUserLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(menuUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(iconUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        menuSifat.setBackground(new java.awt.Color(35, 78, 121));
+
+        iconSifat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/sifat.png"))); // NOI18N
+
+        lblSifat.setForeground(new java.awt.Color(204, 204, 204));
+        lblSifat.setText("Sifat Surat");
+
+        javax.swing.GroupLayout menuSifatLayout = new javax.swing.GroupLayout(menuSifat);
+        menuSifat.setLayout(menuSifatLayout);
+        menuSifatLayout.setHorizontalGroup(
+            menuSifatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuSifatLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(iconSifat)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblSifat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        menuSifatLayout.setVerticalGroup(
+            menuSifatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuSifatLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(menuSifatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(iconSifat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblSifat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        menuOPD.setBackground(new java.awt.Color(35, 78, 121));
+
+        iconOPD.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/opd.png"))); // NOI18N
+
+        lblOPD.setForeground(new java.awt.Color(204, 204, 204));
+        lblOPD.setText("OPD");
+
+        javax.swing.GroupLayout menuOPDLayout = new javax.swing.GroupLayout(menuOPD);
+        menuOPD.setLayout(menuOPDLayout);
+        menuOPDLayout.setHorizontalGroup(
+            menuOPDLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuOPDLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(iconOPD)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblOPD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        menuOPDLayout.setVerticalGroup(
+            menuOPDLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuOPDLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(menuOPDLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(iconOPD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblOPD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jPanel24Layout = new javax.swing.GroupLayout(jPanel24);
+        jPanel24.setLayout(jPanel24Layout);
+        jPanel24Layout.setHorizontalGroup(
+            jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel24Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(menuUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(menuSifat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(menuOPD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+        jPanel24Layout.setVerticalGroup(
+            jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel24Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(menuUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(menuSifat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(menuOPD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout subMenuSettingLayout = new javax.swing.GroupLayout(subMenuSetting);
+        subMenuSetting.setLayout(subMenuSettingLayout);
+        subMenuSettingLayout.setHorizontalGroup(
+            subMenuSettingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(subMenuSettingLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
+        );
+        subMenuSettingLayout.setVerticalGroup(
+            subMenuSettingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, subMenuSettingLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(subMenuSettingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -342,26 +806,22 @@ public class FormMain extends JMPCForm implements IFilter {
             .addGroup(jPanel13Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(menuSM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(menuSK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(menuSetting, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(subMenuSetting, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel13Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addComponent(menuSM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(menuSK, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(menuSetting, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5)
+                .addComponent(subMenuSetting, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -369,12 +829,12 @@ public class FormMain extends JMPCForm implements IFilter {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -386,7 +846,7 @@ public class FormMain extends JMPCForm implements IFilter {
                 .addContainerGap())
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel2.setBackground(new java.awt.Color(35, 78, 121));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -396,19 +856,21 @@ public class FormMain extends JMPCForm implements IFilter {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 22, Short.MAX_VALUE)
+            .addGap(0, 26, Short.MAX_VALUE)
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel3.setBackground(new java.awt.Color(238, 238, 238));
+        jPanel3.setForeground(new java.awt.Color(204, 204, 204));
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel4.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel4.setOpaque(false);
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel7.setOpaque(false);
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel1.setText("Title");
 
-        jPanel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel9.setOpaque(false);
 
         jLabel2.setText("Tahun");
 
@@ -426,7 +888,7 @@ public class FormMain extends JMPCForm implements IFilter {
         jLabel3.setIconTextGap(10);
         jLabel3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        jPanel15.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel15.setOpaque(false);
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
@@ -451,7 +913,7 @@ public class FormMain extends JMPCForm implements IFilter {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
@@ -489,22 +951,22 @@ public class FormMain extends JMPCForm implements IFilter {
                 .addContainerGap())
         );
 
-        jPanel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel8.setOpaque(false);
 
-        jPanel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel10.setOpaque(false);
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
         jPanel10Layout.setHorizontalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 234, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 31, Short.MAX_VALUE)
         );
 
-        jPanel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel11.setOpaque(false);
 
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/advance_search_small.png"))); // NOI18N
         jButton6.setText("Pencarian Lanjutan");
@@ -520,7 +982,7 @@ public class FormMain extends JMPCForm implements IFilter {
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(61, Short.MAX_VALUE)
                 .addComponent(jButton6)
                 .addContainerGap())
         );
@@ -574,20 +1036,22 @@ public class FormMain extends JMPCForm implements IFilter {
                 .addContainerGap())
         );
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel5.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel5.setOpaque(false);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 685, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 237, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel6.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel6.setOpaque(false);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -600,7 +1064,8 @@ public class FormMain extends JMPCForm implements IFilter {
             .addGap(0, 45, Short.MAX_VALUE)
         );
 
-        jPanel14.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel14.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel14.setOpaque(false);
 
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
         jPanel14.setLayout(jPanel14Layout);
@@ -623,13 +1088,13 @@ public class FormMain extends JMPCForm implements IFilter {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -637,11 +1102,11 @@ public class FormMain extends JMPCForm implements IFilter {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -653,7 +1118,7 @@ public class FormMain extends JMPCForm implements IFilter {
             .addGroup(jPanelMainLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(0, 0, 0)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -664,12 +1129,11 @@ public class FormMain extends JMPCForm implements IFilter {
             .addGroup(jPanelMainLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanelMainLayout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -693,38 +1157,6 @@ public class FormMain extends JMPCForm implements IFilter {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        this.gotoMenu(FormMain.MENU_OPD);
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-        this.gotoMenu(FormMain.MENU_SS);
-        
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        this.gotoMenu(FormMain.MENU_USER);
-    }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        this.gotoMenu(FormMain.MENU_SM);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        
-        this.gotoMenu(FormMain.MENU_SK);
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jSpinner1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSpinner1MouseClicked
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_jSpinner1MouseClicked
-
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
         if(this.currentMenu==FormMain.MENU_SM){
@@ -734,8 +1166,13 @@ public class FormMain extends JMPCForm implements IFilter {
             if(this.filter==null)this.filter=FormAdvance.create(this, true).formMain(this).mode(FormAdvance.MODE_SURAT_KELUAR);
             this.filter.setVisible(true);
         }
-        
+
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jSpinner1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSpinner1MouseClicked
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jSpinner1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -773,16 +1210,18 @@ public class FormMain extends JMPCForm implements IFilter {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JLabel iconOPD;
+    private javax.swing.JLabel iconSK;
+    private javax.swing.JLabel iconSM;
+    private javax.swing.JLabel iconSetting;
+    private javax.swing.JLabel iconSifat;
+    private javax.swing.JLabel iconUser;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jFilterMsg;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
@@ -791,6 +1230,8 @@ public class FormMain extends JMPCForm implements IFilter {
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel23;
+    private javax.swing.JPanel jPanel24;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -800,6 +1241,19 @@ public class FormMain extends JMPCForm implements IFilter {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel jPanelMain;
     private javax.swing.JSpinner jSpinner1;
+    private javax.swing.JLabel lblOPD;
+    private javax.swing.JLabel lblSK;
+    private javax.swing.JLabel lblSM;
+    private javax.swing.JLabel lblSetting;
+    private javax.swing.JLabel lblSifat;
+    private javax.swing.JLabel lblUser;
+    private javax.swing.JPanel menuOPD;
+    private javax.swing.JPanel menuSK;
+    private javax.swing.JPanel menuSM;
+    private javax.swing.JPanel menuSetting;
+    private javax.swing.JPanel menuSifat;
+    private javax.swing.JPanel menuUser;
+    private javax.swing.JPanel subMenuSetting;
     // End of variables declaration//GEN-END:variables
 
 

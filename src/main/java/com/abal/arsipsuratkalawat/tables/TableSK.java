@@ -94,6 +94,18 @@ public class TableSK implements JMFormInterface{
         pnlTable.add(sp,BorderLayout.CENTER);
         
         this.btnGroup=new JMPCDBButtonGroup(this.dbObject,this.title,false,false);
+        this.btnGroup.getBtnAdd().setText(R.label("DB_ADD"));
+        this.btnGroup.getBtnDelete().setText(R.label("DB_DELETE"));
+        this.btnGroup.getBtnEdit().setText(R.label("DB_EDIT"));
+        this.btnGroup.getBtnSave().setText(R.label("DB_SAVE"));
+        this.btnGroup.getBtnCancel().setText(R.label("DB_CANCEL"));
+        this.btnGroup.getBtnRefresh().setText(R.label("DB_REFRESH"));
+        this.btnGroup.getBtnPrint().setText(R.label("DB_PRINT"));
+        this.btnGroup.getBtnFirst().setText(R.label("DB_FIRST"));
+        this.btnGroup.getBtnLast().setText(R.label("DB_LAST"));
+        this.btnGroup.getBtnNext().setText(R.label("DB_NEXT"));
+        this.btnGroup.getBtnPrev().setText(R.label("DB_PREV"));
+        
         JPanel pnlButtons=parent.getPanelButtons();
         pnlButtons.removeAll();
         pnlButtons.setLayout(new BorderLayout());

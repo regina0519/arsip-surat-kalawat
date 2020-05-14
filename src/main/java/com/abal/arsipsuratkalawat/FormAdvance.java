@@ -345,14 +345,20 @@ public class FormAdvance extends JMPCFormModal {
         pnlAktifTemb = new javax.swing.JPanel();
         pnlTemb = new javax.swing.JPanel();
 
+        setUndecorated(true);
+
+        jPanelMain.setBackground(new java.awt.Color(35, 78, 121));
         jPanelMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel1.setBackground(new java.awt.Color(238, 238, 238));
+        jPanel1.setOpaque(false);
 
+        jLabel1.setBackground(new java.awt.Color(238, 238, 238));
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(238, 238, 238));
         jLabel1.setText("Pencarian Lanjutan Surat Masuk");
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel7.setOpaque(false);
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -386,7 +392,8 @@ public class FormAdvance extends JMPCFormModal {
                 .addContainerGap())
         );
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel5.setBackground(new java.awt.Color(238, 238, 238));
+        jPanel5.setOpaque(false);
 
         jButton1.setText("OK");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -412,22 +419,23 @@ public class FormAdvance extends JMPCFormModal {
                 .addContainerGap())
         );
 
-        jPanel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel8.setBackground(new java.awt.Color(238, 238, 238));
+        jPanel8.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        pnlTglSrt.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pnlTglSrt.setOpaque(false);
 
         javax.swing.GroupLayout pnlTglSrtLayout = new javax.swing.GroupLayout(pnlTglSrt);
         pnlTglSrt.setLayout(pnlTglSrtLayout);
         pnlTglSrtLayout.setHorizontalGroup(
             pnlTglSrtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 672, Short.MAX_VALUE)
+            .addGap(0, 574, Short.MAX_VALUE)
         );
         pnlTglSrtLayout.setVerticalGroup(
             pnlTglSrtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 32, Short.MAX_VALUE)
         );
 
-        jPanel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel10.setOpaque(false);
 
         jLabel9.setText("Sampai");
 
@@ -485,22 +493,23 @@ public class FormAdvance extends JMPCFormModal {
                 .addContainerGap())
         );
 
-        jPanel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel11.setBackground(new java.awt.Color(238, 238, 238));
+        jPanel11.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        pnlTglAkses.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pnlTglAkses.setOpaque(false);
 
         javax.swing.GroupLayout pnlTglAksesLayout = new javax.swing.GroupLayout(pnlTglAkses);
         pnlTglAkses.setLayout(pnlTglAksesLayout);
         pnlTglAksesLayout.setHorizontalGroup(
             pnlTglAksesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 672, Short.MAX_VALUE)
+            .addGap(0, 574, Short.MAX_VALUE)
         );
         pnlTglAksesLayout.setVerticalGroup(
             pnlTglAksesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 32, Short.MAX_VALUE)
         );
 
-        jPanel13.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel13.setOpaque(false);
 
         jLabel11.setText("Sampai");
 
@@ -558,28 +567,29 @@ public class FormAdvance extends JMPCFormModal {
                 .addContainerGap())
         );
 
-        jPanel14.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel14.setBackground(new java.awt.Color(238, 238, 238));
+        jPanel14.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        pnlAktifTemb.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pnlAktifTemb.setOpaque(false);
 
         javax.swing.GroupLayout pnlAktifTembLayout = new javax.swing.GroupLayout(pnlAktifTemb);
         pnlAktifTemb.setLayout(pnlAktifTembLayout);
         pnlAktifTembLayout.setHorizontalGroup(
             pnlAktifTembLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 672, Short.MAX_VALUE)
+            .addGap(0, 574, Short.MAX_VALUE)
         );
         pnlAktifTembLayout.setVerticalGroup(
             pnlAktifTembLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 32, Short.MAX_VALUE)
         );
 
-        pnlTemb.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pnlTemb.setOpaque(false);
 
         javax.swing.GroupLayout pnlTembLayout = new javax.swing.GroupLayout(pnlTemb);
         pnlTemb.setLayout(pnlTembLayout);
         pnlTembLayout.setHorizontalGroup(
             pnlTembLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 672, Short.MAX_VALUE)
+            .addGap(0, 574, Short.MAX_VALUE)
         );
         pnlTembLayout.setVerticalGroup(
             pnlTembLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -632,7 +642,7 @@ public class FormAdvance extends JMPCFormModal {
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -655,6 +665,7 @@ public class FormAdvance extends JMPCFormModal {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

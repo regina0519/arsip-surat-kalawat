@@ -97,6 +97,18 @@ public class TableSM implements JMFormInterface{
         pnlTable.add(sp,BorderLayout.CENTER);
         
         this.btnGroup=new JMPCDBButtonGroup(this.dbObject,this.title,false,false);
+        this.btnGroup.getBtnAdd().setText(R.label("DB_ADD"));
+        this.btnGroup.getBtnDelete().setText(R.label("DB_DELETE"));
+        this.btnGroup.getBtnEdit().setText(R.label("DB_EDIT"));
+        this.btnGroup.getBtnSave().setText(R.label("DB_SAVE"));
+        this.btnGroup.getBtnCancel().setText(R.label("DB_CANCEL"));
+        this.btnGroup.getBtnRefresh().setText(R.label("DB_REFRESH"));
+        this.btnGroup.getBtnPrint().setText(R.label("DB_PRINT"));
+        this.btnGroup.getBtnFirst().setText(R.label("DB_FIRST"));
+        this.btnGroup.getBtnLast().setText(R.label("DB_LAST"));
+        this.btnGroup.getBtnNext().setText(R.label("DB_NEXT"));
+        this.btnGroup.getBtnPrev().setText(R.label("DB_PREV"));
+        
         JPanel pnlButtons=parent.getPanelButtons();
         pnlButtons.removeAll();
         pnlButtons.setLayout(new BorderLayout());
@@ -197,7 +209,21 @@ public class TableSM implements JMFormInterface{
                 TableSM.this.openForm(false,false);
             }
         });
-        
+        this.btnGroup.getBtnPrint().addAction(new Runnable(){
+            @Override
+            public void run() {
+                List<Integer> ex=new ArrayList();
+                ex.add(0);
+                ex.add(9);
+                ex.add(14);
+                JMFunctions.writeTableToExcel(TableSM.this.dbObject, JMFunctions.getDocDir()+"/"+TableSM.this.dbObject.getName()+".xlsx", ex);
+                try {
+                    Desktop.getDesktop().open(new File(JMFunctions.getDocDir()+"/"+TableSM.this.dbObject.getName()+".xlsx"));
+                } catch (IOException e) {
+                    JMFunctions.errorMessage("Gagal membuka file laporan");
+                }
+            }
+        });
     }
     
     public JMPCDBButtonGroup getButtonGroup(){
@@ -278,32 +304,7 @@ public class TableSM implements JMFormInterface{
 
     @Override
     public void actionAfterPrinted(JMRow rowPrinted) {
-        List<Integer> ex=new ArrayList();
-        ex.add(0);
-        ex.add(9);
-        ex.add(14);
-        /*setLabel(0,R.label("ID_SM"))
-        .setLabel(1,R.label("NO_AGENDA_SM"))
-        .setLabel(2,R.label("NO_SM"))
-        .setLabel(3,R.label("TGL_SM"))
-        .setLabel(4,R.label("ASAL_SM"))
-        .setLabel(5,R.label("PERIHAL_SM"))
-        .setLabel(6,R.label("SIFAT_SM"))
-        .setLabel(7,R.label("LAMPIRAN_SM"))
-        .setLabel(8,R.label("TGL_TERIMA_SM"))
-        .setLabel(9,R.label("ID_USER_SM"))
-        .setLabel(10,R.label("NAMA_USER_SM"))
-        .setLabel(11,R.label("TEMBUSAN_SM"))
-        .setLabel(12,R.label("TUJUAN_SM"))
-        .setLabel(13,R.label("KET_SM"))
-        .setLabel(14,R.label("ID_SM"))*/
-        JMFunctions.writeTableToExcel(this.dbObject, JMFunctions.getDocDir()+"/"+this.dbObject.getName()+".xlsx", ex);
-        try {
-            Desktop.getDesktop().open(new File(JMFunctions.getDocDir()+"/"+this.dbObject.getName()+".xlsx"));
-        } catch (IOException e) {
-            Logger.getLogger(InputSM.class.getName()).log(Level.SEVERE, null, ex);
-            JMFunctions.errorMessage("Gagal membuka file laporan");
-        }
+        
     }
 
     @Override

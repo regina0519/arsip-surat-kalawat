@@ -5,42 +5,56 @@
  */
 package com.abal.arsipsuratkalawat;
 
-import com.abal.arsipsuratkalawat.gina.FormMenu;
-import com.thowo.jmjavaframework.JMDataContainer;
-import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.db.JMResultSet;
-import com.thowo.jmjavaframework.report.JMWord;
-import com.thowo.jmjavaframework.report.JMWordMM;
-import com.thowo.jmjavaframework.table.JMTable;
 import com.thowo.jmpcframework.JMPCFunctions;
-import com.thowo.jmpcframework.component.JMPCForm;
 import com.thowo.jmpcframework.component.JMPCFormModal;
 import com.thowo.jmpcframework.component.JMPCLoadingSprite;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JComponent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 /**
  *
- * @author Regina
+ * @author jimi
  */
-public class LoginForm extends JMPCForm {
-
+public class FormLogin extends JMPCFormModal {
+    private boolean loggedIn=false;
     /**
-     * Creates new form LoginForm
+     * Creates new form FormLogin
      */
-    public LoginForm() {
+    public FormLogin(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
-        //JMPCFunctions.panelBGImage(this.jPanelMain, "img/aaa.png");
         super.setContent(this.jPanelMain, new JMPCLoadingSprite());
+        this.addListener();
     }
     
-    private void tesMM(){
-        JMTable tbl=new JMTable(JMFunctions.getCurrentConnection().queryMySQL("select * from user", true));
-        new JMWordMM(tbl,"/home/jimi/Desktop/tespoi/wordtest1.docx","/home/jimi/Desktop/tespoi/res.docx",false);
-        JMFunctions.traceAndShow("MAIL MERGE DONE");
+    private void addListener(){
+        this.addWindowListener(new WindowListener(){
+            @Override
+            public void windowOpened(WindowEvent e) {}
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                JMFunctions.trace("CLOSING");
+                if(!FormLogin.this.loggedIn)System.exit(0);
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {}
+
+            @Override
+            public void windowIconified(WindowEvent e) {}
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {}
+
+            @Override
+            public void windowActivated(WindowEvent e) {}
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {}
+        });
     }
     
     private boolean login(){
@@ -81,7 +95,8 @@ public class LoginForm extends JMPCForm {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setUndecorated(true);
 
         jPanelMain.setBackground(new java.awt.Color(35, 78, 121));
 
@@ -122,7 +137,7 @@ public class LoginForm extends JMPCForm {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPasswordField1)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -258,8 +273,8 @@ public class LoginForm extends JMPCForm {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -267,27 +282,30 @@ public class LoginForm extends JMPCForm {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPasswordField1ActionPerformed
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         boolean valid=this.login();
-        valid=true;//SEMENTARA
-        Global.setUser("PNS_198503272009032004");//SEMENTARA
-        Global.setAdmin(true);//SEMENTARA
-        Global.setEditor(true);//SEMENTARA
+        //valid=true;//SEMENTARA
+        //Global.setUser("PNS_198503272009032004");//SEMENTARA
+        //Global.setAdmin(true);//SEMENTARA
+        //Global.setEditor(false);//SEMENTARA
         if(valid){
             this.setVisible(false);
+            
             new FormMain().setVisible(true);
             //new FormAdvance(this,true).setVisible(true);
             //new FormTes3().setVisible(true);
-
 
             /*new Thread(new Runnable(){
                 @Override
@@ -304,10 +322,6 @@ public class LoginForm extends JMPCForm {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jPasswordField1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         System.exit(0);
@@ -318,7 +332,7 @@ public class LoginForm extends JMPCForm {
         boolean valid=this.login();
         if(valid){
             this.setVisible(false);
-            //new PassForm(null,true).setCaller(this).setVisible(true);
+            new PassForm(null,true).setCaller(this).setVisible(true);
         }
         else JMFunctions.errorMessage("Login gagal. Periksa kembali ID dan Password");
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -340,20 +354,27 @@ public class LoginForm extends JMPCForm {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //new LoginForm().setVisible(true);
+                FormLogin dialog = new FormLogin(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }

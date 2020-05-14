@@ -112,8 +112,9 @@ public class SplashScreen extends javax.swing.JFrame {
                             JMFunctions.traceAndShow("NDA");
                             System.exit(0);
                         }else{
-                            new LoginForm().setVisible(true);
                             SplashScreen.this.setVisible(false);
+                            new FormLogin(SplashScreen.this,false).setVisible(true);
+                            
                         }
                     }
                 });
