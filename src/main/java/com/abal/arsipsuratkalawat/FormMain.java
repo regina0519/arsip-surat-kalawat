@@ -6,6 +6,7 @@
 package com.abal.arsipsuratkalawat;
 
 import com.abal.arsipsuratkalawat.tables.TableOPD;
+import com.abal.arsipsuratkalawat.tables.TableSK;
 import com.abal.arsipsuratkalawat.tables.TableSM;
 import com.abal.arsipsuratkalawat.tables.TableSS;
 import com.abal.arsipsuratkalawat.tables.TableUser;
@@ -138,6 +139,7 @@ public class FormMain extends JMPCForm implements IFilter {
     }
     
     private void gotoSM(){
+        this.jLabel1.setText("Agenda Surat Masuk");
         String q="SELECT \n" +
             "surat_masuk.id_sm AS id_sm,\n" +
             "surat_masuk.no_agenda AS no_agenda,\n" +
@@ -161,12 +163,31 @@ public class FormMain extends JMPCForm implements IFilter {
         
         TableSM smTbl=TableSM.create(q, FormMain.this);
         this.search.setAction(smTbl.filter(this.search));
-        this.jLabel1.setText("Agenda Surat Masuk");
+        
     }
     private void gotoSK(){
         this.jLabel1.setText("Agenda Surat Keluar");
-        String q;
-        if(this.filtered)q=this.queryFilter;
+        String q="SELECT \n" +
+            "surat_keluar.id_sk AS id_sk,\n" +
+            "surat_keluar.no_agenda AS no_agenda,\n" +
+            "surat_keluar.no_sk AS no_sk,\n" +
+            "surat_keluar.tgl_sk AS tgl,\n" +
+            "surat_keluar.perihal_sk AS perihal_sk,\n" +
+            "surat_keluar.sifat_sk AS sifat_sk,\n" +
+            "surat_keluar.lampiran_sk AS lampiran_sk,\n" +
+            "surat_keluar.tgl_keluar AS tgl_keluar,\n" +
+            "surat_keluar.id_user AS id_user,\n" +
+            "user.nama_user AS nama_user,\n" +
+            "surat_keluar.tujuan_sk AS tujuan_sk,\n" +
+            "surat_keluar.ket_sk AS ket_sk,\n" +
+            "surat_keluar.id_sk AS id_img\n" +
+            "FROM surat_keluar,user\n" +
+            "WHERE surat_keluar.id_user=user.id_user\n" +
+            " and YEAR(surat_keluar.tgl_keluar)='"+this.jSpinner1.getValue()+"'\n" +
+            "ORDER BY tgl_keluar desc";
+        TableSK skTbl=TableSK.create(q, FormMain.this);
+        this.search.setAction(skTbl.filter(this.search));
+        
     }
     private void gotoOPD(){
         if(!Global.getAdmin())return;
@@ -696,7 +717,7 @@ public class FormMain extends JMPCForm implements IFilter {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         
-        this.gotoMenu(FormMain.MENU_SM);
+        this.gotoMenu(FormMain.MENU_SK);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jSpinner1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSpinner1MouseClicked

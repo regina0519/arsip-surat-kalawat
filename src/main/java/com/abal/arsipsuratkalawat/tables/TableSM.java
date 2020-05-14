@@ -19,13 +19,17 @@ import com.thowo.jmpcframework.component.JMPCTable;
 import com.thowo.jmpcframework.component.form.JMPCDBButtonGroup;
 import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblaf;
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -107,7 +111,17 @@ public class TableSM implements JMFormInterface{
             this.btnGroup.stateInit();
         }
         
+        this.lockAccess();
         
+    }
+    
+    private void lockAccess(){
+        this.btnGroup.getBtnAdd().setVisible(Global.getEditor());
+        this.btnGroup.getBtnDelete().setVisible(Global.getEditor());
+        this.btnGroup.getBtnEdit().setVisible(Global.getEditor());
+        this.btnGroup.getBtnSave().setVisible(Global.getEditor());
+        this.btnGroup.getBtnCancel().setVisible(Global.getEditor());
+        this.btnGroup.getBtnPrint().setVisible(Global.getEditor());
     }
     
     private void openForm(boolean editing, boolean adding){
@@ -264,7 +278,32 @@ public class TableSM implements JMFormInterface{
 
     @Override
     public void actionAfterPrinted(JMRow rowPrinted) {
-        
+        List<Integer> ex=new ArrayList();
+        ex.add(0);
+        ex.add(9);
+        ex.add(14);
+        /*setLabel(0,R.label("ID_SM"))
+        .setLabel(1,R.label("NO_AGENDA_SM"))
+        .setLabel(2,R.label("NO_SM"))
+        .setLabel(3,R.label("TGL_SM"))
+        .setLabel(4,R.label("ASAL_SM"))
+        .setLabel(5,R.label("PERIHAL_SM"))
+        .setLabel(6,R.label("SIFAT_SM"))
+        .setLabel(7,R.label("LAMPIRAN_SM"))
+        .setLabel(8,R.label("TGL_TERIMA_SM"))
+        .setLabel(9,R.label("ID_USER_SM"))
+        .setLabel(10,R.label("NAMA_USER_SM"))
+        .setLabel(11,R.label("TEMBUSAN_SM"))
+        .setLabel(12,R.label("TUJUAN_SM"))
+        .setLabel(13,R.label("KET_SM"))
+        .setLabel(14,R.label("ID_SM"))*/
+        JMFunctions.writeTableToExcel(this.dbObject, JMFunctions.getDocDir()+"/"+this.dbObject.getName()+".xlsx", ex);
+        try {
+            Desktop.getDesktop().open(new File(JMFunctions.getDocDir()+"/"+this.dbObject.getName()+".xlsx"));
+        } catch (IOException e) {
+            Logger.getLogger(InputSM.class.getName()).log(Level.SEVERE, null, ex);
+            JMFunctions.errorMessage("Gagal membuka file laporan");
+        }
     }
 
     @Override

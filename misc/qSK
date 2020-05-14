@@ -1,0 +1,18 @@
+SELECT 
+surat_keluar.id_sk AS id_sk,
+surat_keluar.no_agenda AS no_agenda,
+surat_keluar.no_sk AS no_sk,
+surat_keluar.tgl_sk AS tgl,
+surat_keluar.perihal_sk AS perihal_sk,
+surat_keluar.sifat_sk AS sifat_sk,
+surat_keluar.lampiran_sk AS lampiran_sk,
+surat_keluar.tgl_keluar AS tgl_keluar,
+surat_keluar.id_user AS id_user,
+user.nama_user AS nama_user,
+surat_keluar.tujuan_sk AS tujuan_sk,
+surat_keluar.ket_sk AS ket_sk,
+surat_keluar.id_sk AS id_img
+FROM surat_keluar,user
+WHERE surat_keluar.id_user=user.id_user
+ and YEAR(surat_keluar.tgl_terima)='+this.jSpinner1.getValue()+'
+ORDER BY tgl_keluar desc;

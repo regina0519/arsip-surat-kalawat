@@ -6,6 +6,7 @@
 package com.abal.arsipsuratkalawat.tables;
 
 import com.abal.arsipsuratkalawat.FormMain;
+import com.abal.arsipsuratkalawat.Global;
 import com.abal.arsipsuratkalawat.R;
 import com.thowo.jmjavaframework.JMFormInterface;
 import com.thowo.jmjavaframework.JMFunctions;
@@ -86,10 +87,20 @@ public class TableOPD implements JMFormInterface{
             this.btnGroup.stateInit();
         }
         
+        this.lockAccess();
         
         
         this.btnGroup.getBtnPrint().setVisible(false);
         
+    }
+    
+    private void lockAccess(){
+        this.btnGroup.getBtnAdd().setVisible(Global.getEditor());
+        this.btnGroup.getBtnDelete().setVisible(Global.getEditor());
+        this.btnGroup.getBtnEdit().setVisible(Global.getEditor());
+        this.btnGroup.getBtnSave().setVisible(Global.getEditor());
+        this.btnGroup.getBtnCancel().setVisible(Global.getEditor());
+        this.btnGroup.getBtnPrint().setVisible(Global.getEditor());
     }
     
     private void openForm(boolean editing, boolean adding){

@@ -8,6 +8,7 @@ package com.abal.arsipsuratkalawat.tables;
 import com.abal.arsipsuratkalawat.FormMain;
 import com.abal.arsipsuratkalawat.FormView;
 import com.abal.arsipsuratkalawat.FormViewAgenda;
+import com.abal.arsipsuratkalawat.Global;
 import com.abal.arsipsuratkalawat.R;
 import com.asprise.imaging.core.Imaging;
 import com.asprise.imaging.core.Request;
@@ -21,6 +22,7 @@ import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.db.JMConnection;
 import com.thowo.jmjavaframework.db.JMResultSet;
+import com.thowo.jmjavaframework.report.JMWordMM;
 import com.thowo.jmjavaframework.table.JMRow;
 import com.thowo.jmjavaframework.table.JMTable;
 import com.thowo.jmpcframework.component.JMPCAsyncLoaderPanel;
@@ -31,14 +33,18 @@ import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblafAC;
 import com.thowo.jmpcframework.component.form.JMPCSwitchWeblaf;
 import com.thowo.jmpcframework.others.JMImageFilter;
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -49,27 +55,25 @@ import javax.swing.WindowConstants;
  * @author Regina
  */
 public class InputSK implements JMFormInterface {
-    private final String title=R.label("TITLE_SM");
+    private final String title=R.label("TITLE_SK");
     private final JMTable table;
     private final FormViewAgenda form;
     private final FormMain parent;
     private boolean init=true;
     
-    private JMPCInputStringTFWeblaf fIdSM;
-    private JMPCInputStringTFWeblaf fAgendaSM;
-    private JMPCInputStringTFWeblaf fNoSM;
-    private JMPCInputStringTFWeblaf fTglSM;
-    private JMPCInputStringTFWeblaf fAsalSM;
-    private JMPCInputStringTFWeblaf fHalSM;
-    private JMPCInputStringTFWeblaf fSifatSM;
-    private JMPCInputStringTFWeblaf fLampSM;
-    private JMPCInputStringTFWeblaf fTglTerimaSM;
-    private JMPCInputStringTFWeblaf fIdUserSM;
-    private JMPCInputStringTFWeblaf fNamaUserSM;
-    private JMPCSwitchWeblaf fTembusanSM;
-    private JMPCInputStringTFWeblaf fTujuanSM;
-    private JMPCInputStringTFWeblaf fKetSM;
-    private JMPCImagesViewerDB fIdImgSM;
+    private JMPCInputStringTFWeblaf fIdSK;
+    private JMPCInputStringTFWeblaf fAgendaSK;
+    private JMPCInputStringTFWeblaf fNoSK;
+    private JMPCInputStringTFWeblaf fTglSK;
+    private JMPCInputStringTFWeblaf fHalSK;
+    private JMPCInputStringTFWeblaf fSifatSK;
+    private JMPCInputStringTFWeblaf fLampSK;
+    private JMPCInputStringTFWeblaf fTglKeluarSK;
+    private JMPCInputStringTFWeblaf fIdUserSK;
+    private JMPCInputStringTFWeblaf fNamaUserSK;
+    private JMPCInputStringTFWeblaf fTujuanSK;
+    private JMPCInputStringTFWeblaf fKetSK;
+    private JMPCImagesViewerDB fIdImgSK;
     private JMRow row;
     private final JMPCDBButtonGroup btnGroup;
     private boolean editMode=false;
@@ -98,97 +102,106 @@ public class InputSK implements JMFormInterface {
     public void view(boolean editing,boolean adding){
         int width=400;
         boolean horizontal=true;
-        this.fIdSM=JMPCInputStringTFWeblaf.create(R.label("ID_SM"),R.label("PROMPT_ID_SM"), 20, width, horizontal).setEditable(false);
-        this.fAgendaSM=JMPCInputStringTFWeblaf.create(R.label("NO_AGENDA_SM"),R.label("PROMPT_NO_AGENDA_SM"), 20, width, horizontal).setEditable(true);
-        this.fNoSM=JMPCInputStringTFWeblaf.create(R.label("NO_SM"),R.label("PROMPT_NO_SM"), 20, width, horizontal).setEditable(true);
-        this.fTglSM=JMPCInputStringTFWeblaf.create(R.label("TGL_SM"),R.label("PROMPT_TGL_SM"), 20, width, horizontal).setEditable(true);
-        this.fAsalSM=JMPCInputStringTFWeblaf.create(R.label("ASAL_SM"),R.label("PROMPT_ASAL_SM"), 20, width, horizontal).setEditable(true);
-        this.fHalSM=JMPCInputStringTFWeblaf.create(R.label("PERIHAL_SM"),R.label("PROMPT_PERIHAL_SM"), 20, width, horizontal).setEditable(true);
-        this.fSifatSM=JMPCInputStringTFWeblaf.create(R.label("SIFAT_SM"),R.label("PROMPT_SIFAT_SM"), 20, width, horizontal).setEditable(true);
-        this.fLampSM=JMPCInputStringTFWeblaf.create(R.label("LAMPIRAN_SM"),R.label("PROMPT_LAMPIRAN_SM"), 20, width, horizontal).setEditable(true);
-        this.fTglTerimaSM=JMPCInputStringTFWeblaf.create(R.label("TGL_TERIMA_SM"),R.label("PROMPT_TGL_TERIMA_SM"), 20, width, horizontal).setEditable(true);
-        this.fIdUserSM=JMPCInputStringTFWeblaf.create(R.label("ID_USER_SM"),R.label("PROMPT_ID_USER_SM"), 20, width, horizontal).setEditable(false);
-        this.fNamaUserSM=JMPCInputStringTFWeblaf.create(R.label("NAMA_USER_SM"),R.label("PROMPT_NAMA_USER_SM"), 20, width, horizontal).setEditable(false);
-        this.fTembusanSM=JMPCSwitchWeblaf.create(R.label("TEMBUSAN_TRUE"),R.label("TEMBUSAN_FALSE"), 20, width, horizontal).setEditable(true);
-        this.fTujuanSM=JMPCInputStringTFWeblaf.create(R.label("TUJUAN_SM"),R.label("PROMPT_TUJUAN_SM"), 20, width, horizontal).setEditable(true);
-        this.fKetSM=JMPCInputStringTFWeblaf.create(R.label("KET_SM"),R.label("PROMPT_KET_SM"), 20, width, horizontal).setEditable(true);
-        this.fIdImgSM=JMPCImagesViewerDB.create(250,250).setEditable(true);
+        this.fIdSK=JMPCInputStringTFWeblaf.create(R.label("ID_SK"),R.label("PROMPT_ID_SK"), 20, width, horizontal).setEditable(false);
+        this.fAgendaSK=JMPCInputStringTFWeblaf.create(R.label("NO_AGENDA_SK"),R.label("PROMPT_NO_AGENDA_SK"), 20, width, horizontal).setEditable(true);
+        this.fNoSK=JMPCInputStringTFWeblaf.create(R.label("NO_SK"),R.label("PROMPT_NO_SK"), 20, width, horizontal).setEditable(true);
+        this.fTglSK=JMPCInputStringTFWeblaf.create(R.label("TGL_SK"),R.label("PROMPT_TGL_SK"), 20, width, horizontal).setEditable(true);
+        this.fHalSK=JMPCInputStringTFWeblaf.create(R.label("PERIHAL_SK"),R.label("PROMPT_PERIHAL_SK"), 20, width, horizontal).setEditable(true);
+        this.fSifatSK=JMPCInputStringTFWeblaf.create(R.label("SIFAT_SK"),R.label("PROMPT_SIFAT_SK"), 20, width, horizontal).setEditable(true);
+        this.fLampSK=JMPCInputStringTFWeblaf.create(R.label("LAMPIRAN_SK"),R.label("PROMPT_LAMPIRAN_SK"), 20, width, horizontal).setEditable(true);
+        this.fTglKeluarSK=JMPCInputStringTFWeblaf.create(R.label("TGL_KELUAR_SK"),R.label("PROMPT_TGL_KELUAR_SK"), 20, width, horizontal).setEditable(true);
+        this.fIdUserSK=JMPCInputStringTFWeblaf.create(R.label("ID_USER_SK"),R.label("PROMPT_ID_USER_SK"), 20, width, horizontal).setEditable(false);
+        this.fNamaUserSK=JMPCInputStringTFWeblaf.create(R.label("NAMA_USER_SK"),R.label("PROMPT_NAMA_USER_SK"), 20, width, horizontal).setEditable(false);
+        this.fTujuanSK=JMPCInputStringTFWeblaf.create(R.label("TUJUAN_SK"),R.label("PROMPT_TUJUAN_SK"), 20, width, horizontal).setEditable(true);
+        this.fKetSK=JMPCInputStringTFWeblaf.create(R.label("KET_SK"),R.label("PROMPT_KET_SK"), 20, width, horizontal).setEditable(true);
+        this.fIdImgSK=JMPCImagesViewerDB.create(250,250).setEditable(true);
         
         
-        this.table.setFormInterface(this.fIdSM, 0,true);
-        this.table.setFormInterface(this.fAgendaSM, 1,true);
-        this.table.setFormInterface(this.fNoSM, 2,true);
-        this.table.setFormInterface(this.fTglSM, 3,true);
-        this.table.setFormInterface(this.fAsalSM, 4,true);
-        this.table.setFormInterface(this.fHalSM, 5,true);
-        this.table.setFormInterface(this.fSifatSM, 6,true);
-        this.table.setFormInterface(this.fLampSM, 7,true);
-        this.table.setFormInterface(this.fTglTerimaSM, 8,true);
-        this.table.setFormInterface(this.fIdUserSM, 9,true);
-        this.table.setFormInterface(this.fNamaUserSM, 10,true);
-        this.table.setFormInterface(this.fTembusanSM, 11,true);
-        this.table.setFormInterface(this.fTujuanSM, 12,true);
-        this.table.setFormInterface(this.fKetSM, 13,true);
-        this.table.setFormInterface(this.fIdImgSM, 14,true);
+        this.table.setFormInterface(this.fIdSK, 0,true);
+        this.table.setFormInterface(this.fAgendaSK, 1,true);
+        this.table.setFormInterface(this.fNoSK, 2,true);
+        this.table.setFormInterface(this.fTglSK, 3,true);
+        this.table.setFormInterface(this.fHalSK, 4,true);
+        this.table.setFormInterface(this.fSifatSK, 5,true);
+        this.table.setFormInterface(this.fLampSK, 6,true);
+        this.table.setFormInterface(this.fTglKeluarSK, 7,true);
+        this.table.setFormInterface(this.fIdUserSK, 8,true);
+        this.table.setFormInterface(this.fNamaUserSK, 9,true);
+        this.table.setFormInterface(this.fTujuanSK, 10,true);
+        this.table.setFormInterface(this.fKetSK, 11,true);
+        this.table.setFormInterface(this.fIdImgSK, 12,true);
         
         this.row.displayInterface(true);
-        this.fIdUserSM.setVisible(false);
+        this.fIdUserSK.setVisible(false);
         
         Box box=Box.createVerticalBox();
-        box.add(this.fIdSM);
-        box.add(this.fAgendaSM);
-        box.add(this.fNoSM);
-        box.add(this.fTglSM);
-        box.add(this.fAsalSM);
-        box.add(this.fHalSM);
-        box.add(this.fSifatSM);
-        box.add(this.fLampSM);
-        box.add(this.fTglTerimaSM);
-        box.add(this.fIdUserSM);
-        box.add(this.fNamaUserSM);
-        box.add(this.fTembusanSM);
-        box.add(this.fTujuanSM);
-        box.add(this.fKetSM);
+        box.add(this.fIdSK);
+        box.add(this.fAgendaSK);
+        box.add(this.fNoSK);
+        box.add(this.fTglSK);
+        box.add(this.fHalSK);
+        box.add(this.fSifatSK);
+        box.add(this.fLampSK);
+        box.add(this.fTglKeluarSK);
+        box.add(this.fIdUserSK);
+        box.add(this.fNamaUserSK);
+        box.add(this.fTujuanSK);
+        box.add(this.fKetSK);
         
         
         form.getInputPanel().setLayout(new FlowLayout());
         form.getInputPanel().add(box);
         
         form.getImagesViewer().setLayout(new FlowLayout());
-        form.getImagesViewer().add(this.fIdImgSM);
+        form.getImagesViewer().add(this.fIdImgSK);
         form.pack();
         this.addListener();
         
         
         this.setEditMode(editing);
         //this.table.getCurrentRow().displayInterface(false);
-        this.table.viewRow();
+        if(!adding){
+            this.table.viewRow();
+            if(editing){
+                this.table.editRow();
+            }
+            
+        }
         this.init=false;
         
-        
+        this.lockAccess();
         
         this.btnGroup.getBtnView().setVisible(false);
+        
+        this.btnGroup.getBtnPrint().setVisible(false);
         
         form.setVisible(true);
     }
     
+    private void lockAccess(){
+        this.btnGroup.getBtnAdd().setVisible(Global.getEditor());
+        this.btnGroup.getBtnDelete().setVisible(Global.getEditor());
+        this.btnGroup.getBtnEdit().setVisible(Global.getEditor());
+        this.btnGroup.getBtnSave().setVisible(Global.getEditor());
+        this.btnGroup.getBtnCancel().setVisible(Global.getEditor());
+        this.btnGroup.getBtnPrint().setVisible(Global.getEditor());
+    }
+    
     private void setEditMode(boolean editMode){
         this.editMode=editMode;
-        this.fIdSM.setEditMode(editMode,this.row,0);
-        this.fAgendaSM.setEditMode(editMode,this.row,1);
-        this.fNoSM.setEditMode(editMode,this.row,2);
-        this.fTglSM.setEditMode(editMode,this.row,3);
-        this.fAsalSM.setEditMode(editMode,this.row,4);
-        this.fHalSM.setEditMode(editMode,this.row,5);
-        this.fSifatSM.setEditMode(editMode,this.row,6);
-        this.fLampSM.setEditMode(editMode,this.row,7);
-        this.fTglTerimaSM.setEditMode(editMode,this.row,8);
-        this.fIdUserSM.setEditMode(editMode,this.row,9);
-        this.fNamaUserSM.setEditMode(editMode,this.row,10);
-        this.fTembusanSM.setEditMode(editMode,this.row,11);
-        this.fTujuanSM.setEditMode(editMode,this.row,12);
-        this.fKetSM.setEditMode(editMode,this.row,13);
-        this.fIdImgSM.setEditMode(editMode,this.row,14);
+        this.fIdSK.setEditMode(editMode,this.row,0);
+        this.fAgendaSK.setEditMode(editMode,this.row,1);
+        this.fNoSK.setEditMode(editMode,this.row,2);
+        this.fTglSK.setEditMode(editMode,this.row,3);
+        this.fHalSK.setEditMode(editMode,this.row,4);
+        this.fSifatSK.setEditMode(editMode,this.row,5);
+        this.fLampSK.setEditMode(editMode,this.row,6);
+        this.fTglKeluarSK.setEditMode(editMode,this.row,7);
+        this.fIdUserSK.setEditMode(editMode,this.row,8);
+        this.fNamaUserSK.setEditMode(editMode,this.row,9);
+        this.fTujuanSK.setEditMode(editMode,this.row,10);
+        this.fKetSK.setEditMode(editMode,this.row,11);
+        this.fIdImgSK.setEditMode(editMode,this.row,12);
     }
     
     
@@ -236,13 +249,7 @@ public class InputSK implements JMFormInterface {
                 
             }
         });
-        this.fTembusanSM.setAction(new Runnable(){
-            @Override
-            public void run() {
-                InputSK.this.setTembusan();
-            }
-        });
-        this.fIdImgSM.setAddAction(new Runnable(){
+        this.fIdImgSK.setAddAction(new Runnable(){
             @Override
             public void run() {
                 
@@ -272,7 +279,7 @@ public class InputSK implements JMFormInterface {
             }while(rOpd.next());
         }
         if(!kOpd.isEmpty()){
-            //this.fAsalSM.setKeyword(kOpd);
+            //this.fAsalSK.setKeyword(kOpd);
         }
         
         List<String> kSS=new ArrayList();
@@ -283,34 +290,34 @@ public class InputSK implements JMFormInterface {
             }while(rSS.next());
         }
         if(!kSS.isEmpty()){
-            //this.fSifatSM.setKeyword(kSS);
+            //this.fSifatSK.setKeyword(kSS);
         }
     } 
     private void refreshImages(){
         if(!InputSK.this.form.isVisible() && !InputSK.this.init)return;
-        InputSK.this.fIdImgSM.clearPaths();
-        String key=InputSK.this.fIdSM.getText();
-        String q="select * from gambar_sm where id_sm='"+key+"' order by halaman_sm asc";
+        InputSK.this.fIdImgSK.clearPaths();
+        String key=InputSK.this.fIdSK.getText();
+        String q="select * from gambar_sk where id_sk='"+key+"' order by halaman_sk asc";
         JMResultSet r=JMFunctions.getCurrentConnection().queryMySQL(q, true);
-        InputSK.this.fIdImgSM.setKeyValue(key);
+        InputSK.this.fIdImgSK.setKeyValue(key);
         if(r.first()){
             do{
-                InputSK.this.fIdImgSM.addImage(r.getString(2));
+                InputSK.this.fIdImgSK.addImage(r.getString(2));
             }while(r.next());
         }
     } 
     private void setTembusan(){
         /*if(this.editMode){
-            if(this.fTembusanSM.getValueString().equals("true")){
-                this.fTujuanSM.unlock();
-                this.fTujuanSM.setText("");
+            if(this.fTembusanSK.getValueString().equals("true")){
+                this.fTujuanSK.unlock();
+                this.fTujuanSK.setText("");
             }else{
-                this.fTujuanSM.lock();
-                this.fTujuanSM.setText("Kantor Camat Kalawat");
+                this.fTujuanSK.lock();
+                this.fTujuanSK.setText("Kantor Camat Kalawat");
             }
         }else{
-            this.fTujuanSM.lock();
-            this.fTujuanSM.setText(this.fTujuanSM.getValueString());
+            this.fTujuanSK.lock();
+            this.fTujuanSK.setText(this.fTujuanSK.getValueString());
         }*/
         
     }
@@ -344,9 +351,9 @@ public class InputSK implements JMFormInterface {
 
             JMFunctions.copyFile(source, dest);//SCANNED IMAGE
             ret=dest;
-            this.fIdImgSM.addImage(ret);
+            this.fIdImgSK.addImage(ret);
             
-            this.table.getCurrentRow().setValueFromString(14, "0");
+            this.table.getCurrentRow().setValueFromString(12, "0");
         }else{
            JMFunctions.trace("Open Image canceled");
         }
@@ -385,27 +392,27 @@ public class InputSK implements JMFormInterface {
                 dest=tmp+i+++".tmp";
             }
             JMFunctions.copyFile(source, dest);//SCANNED IMAGE
-            this.fIdImgSM.addImage(dest);
+            this.fIdImgSK.addImage(dest);
         }
         this.table.getCurrentRow().setValueFromString(14, "0");
     }
     
     private void saveImages(){
-        List<String> paths=this.fIdImgSM.getPaths();
-        String id=this.fIdSM.getText();
-        String qD="delete from gambar_sm where id_sm='"+id+"'";
-        String qU="replace into gambar_sm values(";
+        List<String> paths=this.fIdImgSK.getPaths();
+        if(paths==null)return;
+        String id=this.fIdSK.getText();
+        String qD="delete from gambar_sk where id_sk='"+id+"'";
+        String qU="replace into gambar_sk values(";
         if(!paths.isEmpty()){
             for(int i=0;i<paths.size();i++){
                 String idDet=id+JMFormatCollection.leadingZero(i+1, 10);
-                String url=JMFunctions.getDocDir()+"/docs/sm/"+id+"/"+(i+1)+".jpg";
+                String url=JMFunctions.getDocDir()+"/docs/sk/"+id+"/"+(i+1)+".jpg";
                 
                 String validS=paths.get(i).replaceAll("\\\\", "/");
                 String validD=url.replaceAll("\\\\", "/");
                 
                 if(!validS.equals(validD)){
-                    JMFunctions.deleteFile(new File(validD));
-                    JMFunctions.moveFile(new File(validS), new File(validD));
+                    JMFunctions.moveFileReplace(new File(validS), new File(validD));
                 }
                 
                 if(i==0)qU+="'"+idDet+"','"+id+"','"+validD+"','"+(i+1)+"')";
@@ -416,6 +423,7 @@ public class InputSK implements JMFormInterface {
         }
         this.deleteImageTmps();
     }
+    
     
     
     
@@ -431,15 +439,24 @@ public class InputSK implements JMFormInterface {
 
     @Override
     public void actionAfterDeleted(JMRow rowDeleted, boolean deleted) {
+        if(deleted){
+            JMFunctions.trace("DELETED");
+            JMFunctions.getCurrentConnection().queryUpdateMySQL("delete from gambar_sk where id_sk='"+rowDeleted.getCells().get(0).getDBValue()+"'", true);
+            JMFunctions.deleteFolder(new File(JMFunctions.getDocDir()+"/docs/sk/"+rowDeleted.getCells().get(0).getDBValue()));
+        }else{
+            JMFunctions.trace("NOT DELETED");
+        }
         this.setEditMode(false);
         this.row=this.table.getCurrentRow();
         this.refreshImages();
         //this.refreshAutocomplete();
         this.setTembusan();
+        
     }
 
     @Override
     public void actionAfterSaved(String updateQuery,boolean saved) {
+        JMFunctions.trace("===============================   SAVED");
         this.setEditMode(!saved);
         this.btnGroup.stateNav();
         this.saveImages();
@@ -459,11 +476,7 @@ public class InputSK implements JMFormInterface {
 
     @Override
     public void actionAfterPrinted(JMRow rowPrinted) {
-        this.row=rowPrinted;
-        this.setEditMode(false);
-        this.refreshImages();
-        //this.refreshAutocomplete();
-        this.setTembusan();
+        
     }
 
     @Override

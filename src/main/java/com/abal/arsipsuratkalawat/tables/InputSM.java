@@ -8,6 +8,7 @@ package com.abal.arsipsuratkalawat.tables;
 import com.abal.arsipsuratkalawat.FormMain;
 import com.abal.arsipsuratkalawat.FormView;
 import com.abal.arsipsuratkalawat.FormViewAgenda;
+import com.abal.arsipsuratkalawat.Global;
 import com.abal.arsipsuratkalawat.R;
 import com.asprise.imaging.core.Imaging;
 import com.asprise.imaging.core.Request;
@@ -21,6 +22,7 @@ import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.db.JMConnection;
 import com.thowo.jmjavaframework.db.JMResultSet;
+import com.thowo.jmjavaframework.report.JMWordMM;
 import com.thowo.jmjavaframework.table.JMRow;
 import com.thowo.jmjavaframework.table.JMTable;
 import com.thowo.jmpcframework.component.JMPCAsyncLoaderPanel;
@@ -31,14 +33,18 @@ import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblafAC;
 import com.thowo.jmpcframework.component.form.JMPCSwitchWeblaf;
 import com.thowo.jmpcframework.others.JMImageFilter;
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -171,11 +177,20 @@ public class InputSM implements JMFormInterface {
         }
         this.init=false;
         
-        
+        this.lockAccess();
         
         this.btnGroup.getBtnView().setVisible(false);
         
         form.setVisible(true);
+    }
+    
+    private void lockAccess(){
+        this.btnGroup.getBtnAdd().setVisible(Global.getEditor());
+        this.btnGroup.getBtnDelete().setVisible(Global.getEditor());
+        this.btnGroup.getBtnEdit().setVisible(Global.getEditor());
+        this.btnGroup.getBtnSave().setVisible(Global.getEditor());
+        this.btnGroup.getBtnCancel().setVisible(Global.getEditor());
+        this.btnGroup.getBtnPrint().setVisible(Global.getEditor());
     }
     
     private void setEditMode(boolean editMode){
@@ -475,6 +490,13 @@ public class InputSM implements JMFormInterface {
 
     @Override
     public void actionAfterPrinted(JMRow rowPrinted) {
+        new JMWordMM(this.table,JMFunctions.getResourcePath("raw/disposisi.docx").getPath(),JMFunctions.getDocDir()+"/disposisi.docx",true);
+        try {
+            Desktop.getDesktop().open(new File(JMFunctions.getDocDir()+"/disposisi.docx"));
+        } catch (IOException ex) {
+            Logger.getLogger(InputSM.class.getName()).log(Level.SEVERE, null, ex);
+            JMFunctions.errorMessage("Gagal membuka file laporan");
+        }
         this.row=rowPrinted;
         this.setEditMode(false);
         this.refreshImages();

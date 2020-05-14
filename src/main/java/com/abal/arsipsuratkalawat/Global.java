@@ -11,8 +11,8 @@ package com.abal.arsipsuratkalawat;
  */
 public class Global {
     private static String user;
-    private static boolean editor=true;//SEMENTARA
-    private static boolean admin=true;//SEMENTARA
+    private static boolean editor;
+    private static boolean admin;
     private static int activeYear=2020;
     
     public static int getActiveYear(){

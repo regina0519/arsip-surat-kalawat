@@ -7,6 +7,7 @@ package com.abal.arsipsuratkalawat.tables;
 
 import com.abal.arsipsuratkalawat.FormMain;
 import com.abal.arsipsuratkalawat.FormView;
+import com.abal.arsipsuratkalawat.Global;
 import com.abal.arsipsuratkalawat.InputTes;
 import com.abal.arsipsuratkalawat.R;
 import com.thowo.jmjavaframework.JMFormInterface;
@@ -112,11 +113,21 @@ public class InputUser implements JMFormInterface {
         this.setEditMode(editing);
         //this.table.getCurrentRow().displayInterface(false);
         
+        this.lockAccess();
         
         this.btnGroup.getBtnPrint().setVisible(false);
         this.btnGroup.getBtnView().setVisible(false);
         
         form.setVisible(true);
+    }
+    
+    private void lockAccess(){
+        this.btnGroup.getBtnAdd().setVisible(Global.getEditor());
+        this.btnGroup.getBtnDelete().setVisible(Global.getEditor());
+        this.btnGroup.getBtnEdit().setVisible(Global.getEditor());
+        this.btnGroup.getBtnSave().setVisible(Global.getEditor());
+        this.btnGroup.getBtnCancel().setVisible(Global.getEditor());
+        this.btnGroup.getBtnPrint().setVisible(Global.getEditor());
     }
     
     private void setEditMode(boolean editMode){
