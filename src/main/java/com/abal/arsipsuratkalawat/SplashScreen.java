@@ -74,7 +74,8 @@ public class SplashScreen extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel1.setForeground(new java.awt.Color(255, 204, 0));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText("Loading");
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
