@@ -7,7 +7,7 @@ package com.abal.arsipsuratkalawat;
 
 /**
  *
- * @author jimi
+ * @author regina
  */
 public class Tes extends javax.swing.JFrame {
 

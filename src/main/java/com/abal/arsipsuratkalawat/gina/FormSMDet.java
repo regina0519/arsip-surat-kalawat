@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class FormSMDet extends JMPCForm {
 

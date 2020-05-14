@@ -7,7 +7,7 @@ package com.abal.arsipsuratkalawat.gina;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class Global {
     public static final int STATE_INIT=0;

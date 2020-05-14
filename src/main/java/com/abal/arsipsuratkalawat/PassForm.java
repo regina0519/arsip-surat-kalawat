@@ -15,7 +15,7 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 /**
  *
- * @author jimi
+ * @author regina
  */
 public class PassForm extends JMPCFormModal{
     private FormLogin loginForm;

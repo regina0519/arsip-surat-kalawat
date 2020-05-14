@@ -34,7 +34,7 @@ import javax.swing.WindowConstants;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class InputUser implements JMFormInterface {
     private final String title=R.label("TITLE_USER");

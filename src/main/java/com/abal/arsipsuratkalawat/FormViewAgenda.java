@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class FormViewAgenda extends JMPCFormModal {
 

@@ -24,7 +24,7 @@ import javax.swing.JComponent;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class LoginForm extends JMPCForm {
 

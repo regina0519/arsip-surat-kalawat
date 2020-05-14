@@ -31,7 +31,7 @@ import javax.swing.JScrollPane;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class TableSS implements JMFormInterface{
     private final String title=R.label("TITLE_SS");

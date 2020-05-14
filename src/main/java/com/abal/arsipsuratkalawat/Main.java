@@ -22,7 +22,7 @@ import javax.swing.plaf.synth.SynthStyleFactory;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class Main {
     

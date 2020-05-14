@@ -43,7 +43,7 @@ import javax.swing.event.ChangeListener;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class FormMain extends JMPCForm implements IFilter {
     public static final int MENU_SM=0;

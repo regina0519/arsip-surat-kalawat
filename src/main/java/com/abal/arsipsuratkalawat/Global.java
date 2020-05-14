@@ -7,7 +7,7 @@ package com.abal.arsipsuratkalawat;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class Global {
     private static String user;

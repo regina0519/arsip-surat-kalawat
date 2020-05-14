@@ -26,7 +26,7 @@ import javax.swing.WindowConstants;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class InputOPD implements JMFormInterface {
     private final String title=R.label("TITLE_OPD");

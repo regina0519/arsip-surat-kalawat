@@ -15,7 +15,7 @@ import java.awt.event.WindowListener;
 
 /**
  *
- * @author jimi
+ * @author regina
  */
 public class FormLogin extends JMPCFormModal {
     private boolean loggedIn=false;

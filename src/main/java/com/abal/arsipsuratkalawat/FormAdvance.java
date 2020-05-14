@@ -30,7 +30,7 @@ import static javax.swing.WindowConstants.HIDE_ON_CLOSE;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class FormAdvance extends JMPCFormModal {
     public static final int MODE_SURAT_MASUK=0;

@@ -52,7 +52,7 @@ import javax.swing.WindowConstants;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class InputSM implements JMFormInterface {
     private final String title=R.label("TITLE_SM");

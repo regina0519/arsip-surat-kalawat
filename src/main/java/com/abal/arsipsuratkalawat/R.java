@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class R {
     private static String langDef="en";

@@ -10,7 +10,7 @@ import com.thowo.jmpcframework.component.JMPCLoadingSprite;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class FormMenu extends JMPCForm {
 

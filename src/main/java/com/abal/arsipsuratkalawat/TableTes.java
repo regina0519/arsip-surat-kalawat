@@ -26,7 +26,7 @@ import javax.swing.SwingUtilities;
 
 /**
  *
- * @author Regina
+ * @author regina
  */
 public class TableTes implements JMFormInterface{
     private final String title=R.label("TITLE_TES");

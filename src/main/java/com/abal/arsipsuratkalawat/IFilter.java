@@ -9,7 +9,7 @@ import com.thowo.jmjavaframework.JMDate;
 
 /**
  *
- * @author jimi
+ * @author regina
  */
 public interface IFilter {
     void filterSM(JMDate tglSuratFrom, JMDate tglSuratTo, JMDate tglTerimaFrom, JMDate tglTerimaTo, int tembusanMode);
