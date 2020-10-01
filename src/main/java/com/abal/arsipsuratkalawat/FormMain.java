@@ -477,7 +477,6 @@ public class FormMain extends JMPCForm implements IFilter {
     }
     
     public void initModule(){
-        TableTes tesTbl=TableTes.create("select * from tes", FormMain.this);
         FormMain.this.pack();
         
     }
